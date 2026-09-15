@@ -7,15 +7,18 @@
 
 **Rule:** Everything we build must deploy on Netlify.
 
+**E2E conflict rule:** [E2E_LOCKS.md](./E2E_LOCKS.md) wins over every other doc when they disagree.
+
 Companion docs (do not invent copy or contracts elsewhere):
 
 | Doc | Role |
 | --- | --- |
+| [E2E_LOCKS.md](./E2E_LOCKS.md) | **Authoritative** create/status/pay/seed/crypto/counts locks |
 | [COPY.md](./COPY.md) | Screens, emails, tone, errors, principles, campaign lines |
 | [FLOWS.md](./FLOWS.md) | Invite handoff, profile gate, Stripe return/refund, offline queue, admin |
 | [API_CONTRACT.md](./API_CONTRACT.md) | Routes, authz, ready vs unlocked, resume cursor, export |
 | [DATA_MODEL.md](./DATA_MODEL.md) | Tables + migrations |
-| [SCORING.md](./SCORING.md) | Algorithm 1.0.0 |
+| [SCORING.md](./SCORING.md) | Algorithm 1.0.0 + count mapping |
 | [PRIVACY.md](./PRIVACY.md) | Invariants + export |
 | [DESIGN_TOKENS.md](./DESIGN_TOKENS.md) | Color/type lock for build |
 | [SEO_BRIEFS.md](./SEO_BRIEFS.md) | Seven editorial pages |
@@ -241,17 +244,22 @@ CLERK_SECRET_KEY
 CLERK_WEBHOOK_SECRET
 NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL=/invite/continue
+NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL=/invite/continue
 STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET
 STRIPE_PRICE_ID
 ANSWER_MASTER_KEY
 RESEND_API_KEY
 EMAIL_FROM
+SUPPORT_EMAIL
+EMAIL_MODE
 SENTRY_DSN
 NEXT_PUBLIC_SITE_URL
 ADMIN_EMAILS
 ```
 
+See `.env.example`. Crypto/key encoding: [E2E_LOCKS.md](./E2E_LOCKS.md) §6.
 ---
 
 ## 13. Deploy checklist

@@ -4,7 +4,8 @@ All routes are Next.js Route Handlers unless noted. Auth via Clerk `await auth()
 
 Base: same origin. No CORS headers.
 
-Flows that span multiple routes: [FLOWS.md](./FLOWS.md).
+**Conflict rule:** [E2E_LOCKS.md](./E2E_LOCKS.md) wins over this file.  
+Flows: [FLOWS.md](./FLOWS.md).
 
 ---
 
@@ -14,13 +15,13 @@ Flows that span multiple routes: [FLOWS.md](./FLOWS.md).
 | --- | --- | --- |
 | `POST /api/checks` | Required | Profile complete; creates check; caller becomes role A |
 | `GET /api/checks/:id` | Required | Must be participant |
-| `POST /api/checks/:id/invite` | Required | Role A only; blocked if B has started answering |
+| `POST /api/checks/:id/invite` | Required | Role A; replace rules in E2E_LOCKS §3 |
 | `POST /api/invitations/:token/accept` | Required | Profile complete; not already participant; not creator; invite valid |
 | `GET /api/responses?checkId=` | Required | Own participant row only (+ resume cursor) |
 | `POST /api/responses` | Required | Own participant; check not deleted/expired |
-| `POST /api/assessment/complete` | Required | Own participant; all required answers present; offline queue empty |
+| `POST /api/assessment/complete` | Required | Own participant; dynamic requiredCount met; offline queue empty |
 | `POST /api/checks/:id/calculate` | Required | Participant; both complete; idempotent (PK on results) |
-| `POST /api/checks/:id/checkout` | Required | **Either** participant; status `ready`; unpaid |
+| `POST /api/checks/:id/checkout` | Required | **Either** participant; status `ready`; unpaid; single open session |
 | `GET /api/checks/:id/checkout/status` | Required | Participant; verifies Stripe session; **does not unlock** |
 | `POST /api/stripe/webhook` | **Public** | Stripe signature only |
 | `GET /api/results/:checkId` | Required | Participant; payload depends on status (below) |
@@ -49,7 +50,7 @@ Allow unauthenticated:
 - `/` and marketing/SEO pages
 - `/privacy`, `/terms`, `/disclaimer`
 - `/sign-in(.*)`
-- `/invite/(.*)` (page shell + token display; accept/continue require auth)
+- `/invite/[^/]+$` **only** (token page). `/invite/continue` is **auth-required**.
 - `/api/stripe/webhook`
 - `/api/clerk/webhook`
 - `/api/health`
@@ -67,6 +68,18 @@ Admin paths: signed-in **and** primary email in `ADMIN_EMAILS` (else 404).
 `complete = firstName present && ageConfirmed18 === true`
 
 `POST /api/checks` and invitation accept return **403** `{ code: "PROFILE_INCOMPLETE" }` if not complete. Client sends user to `/onboarding?next=…`.
+
+---
+
+## 3b. Create check
+
+`POST /api/checks` body/response: **E2E_LOCKS §1**.
+
+---
+
+## 3c. Get check
+
+`GET /api/checks/:id` shape: **E2E_LOCKS §10** (includes partner progress % without decryption).
 
 ---
 
@@ -89,6 +102,8 @@ Admin paths: signed-in **and** primary email in `ADMIN_EMAILS` (else 404).
   "currency": "usd"
 }
 ```
+
+`conversationCount` mapping: **E2E_LOCKS §8**.
 
 ### when `status = unlocked`
 
@@ -130,9 +145,8 @@ Admin paths: signed-in **and** primary email in `ADMIN_EMAILS` (else 404).
 ```
 
 Items sorted by `impact` desc. **No answer fields.**  
-`categoryScores` sorted ascending by `alignmentIndex` (weakest categories first) for UI “By topic” section.
-
-If `payment_status = refunded`, API behaves as **ready/locked** teaser even though `results` rows remain stored.
+UI routes: `/results/[checkId]` and `/results/[checkId]/items/[questionId]` (E2E_LOCKS §9).  
+If `payment_status = refunded`, API behaves as **ready/locked** teaser; results rows retained.
 
 ---
 
@@ -144,7 +158,7 @@ If `payment_status = refunded`, API behaves as **ready/locked** teaser even thou
 {
   "participantId": "…",
   "answerCount": 12,
-  "requiredCount": 96,
+  "requiredCount": 97,
   "followUpsPending": ["CP07F"],
   "currentSectionId": "money",
   "currentQuestionCode": "MO04",
@@ -161,7 +175,7 @@ If `payment_status = refunded`, API behaves as **ready/locked** teaser even thou
 }
 ```
 
-Own answers only. Cursor algorithm: [FLOWS.md](./FLOWS.md) §4.
+`requiredCount` is **dynamic** (E2E_LOCKS §4). Never hardcode 96 when follow-ups pending.
 
 ### Results item — `GET /api/results/:checkId/items/:questionId`
 
@@ -190,46 +204,28 @@ Follow-up example:
 {
   "checkId": "…",
   "questionCode": "CP07F",
-  "answer": ["public_school", "private_school"],
+  "answer": ["public", "private"],
   "importance": 4,
   "hardLine": false
 }
 ```
 
-Rules:
-
-- One question code per request (parent **or** follow-up)
-- `hardLine` only if `importance >= 4`; else forced `false`
-- Follow-up rows: `CP07F` required when parent `CP07` ∈ {4,5}; `MO04F` when parent `MO04` ∈ {3,4,5}
-- Encrypt `{ answer }` only with check DEK
-- Idempotent upsert on `(participant_id, question_id)`
-- Reject complete while required follow-ups missing
+Rules: E2E_LOCKS §4–5 + FLOWS §3. Option values must match bank (`public`, not `public_school`).
 
 ---
 
 ## 7. Reveal / discussed
 
-Unchanged state machine: `none` → `requested_by_a|b` → `mutual` (irreversible).  
+State machine: `none` → `requested_by_a|b` → `mutual` (irreversible).  
 Discussed sets `result_items.discussed_at`.
 
 ---
 
 ## 8. Checkout, return URL, webhooks
 
-`POST /api/checks/:id/checkout` → `{ url }`  
-Session `success_url` / `cancel_url`: [FLOWS.md](./FLOWS.md) §6.
+See **E2E_LOCKS §7** (single open session, idempotency key, success poll, refund re-lock).
 
 `GET /api/checks/:id/checkout/status?session_id=` → `{ stripeStatus, checkStatus }` — **never** unlocks.
-
-`POST /api/stripe/webhook`:
-
-| Event | Effect |
-| --- | --- |
-| `checkout.session.completed` | Pay + unlock; idempotent on session id |
-| `charge.refunded` (full / MVP any) | `payment_status=refunded`; re-lock check to teaser; keep results rows |
-| `checkout.session.expired` | No status change |
-
-Do **not** unlock on client return alone. Success page polls until `unlocked` or timeout.
 
 ---
 
@@ -246,14 +242,13 @@ Do **not** unlock on client return alone. Success page polls until `unlocked` or
 
 ## 10. Account export
 
-`GET /api/account/export` → `Content-Disposition: attachment; filename="unsaid-export.json"`  
-Contents: [FLOWS.md](./FLOWS.md) §10. Own answers only.
+`GET /api/account/export` → attachment JSON; own answers only (FLOWS / E2E_LOCKS).
 
 ---
 
-## 11. Retake / accept abuse / rate limits / analytics
+## 11. Errors, rate limits, analytics
 
-See prior sections + [FLOWS.md](./FLOWS.md). Analytics allowlist unchanged (first-party table only).
+**E2E_LOCKS §11–13.**
 
 ---
 

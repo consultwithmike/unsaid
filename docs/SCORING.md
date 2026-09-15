@@ -53,6 +53,26 @@ Same formula per category section → `category_scores` / API `categoryScores`.
 
 Results UI must show **Alignment by topic** (weakest sections first) using these scores — not only the overall Alignment Index.
 
+## Classification → API counts → teaser
+
+Stored labels: `aligned` \| `slight` \| `conversation` \| `major` \| `major_conversation`.
+
+API `counts`:
+
+| API key | Includes |
+| --- | --- |
+| `aligned` | `aligned` |
+| `minor` | `slight` |
+| `conversation` | `conversation` |
+| `major` | `major` + `major_conversation` |
+| `hardLineCollisions` | rows with hard-line collision |
+
+**Teaser / headline `conversationCount`** (paywall + results hero) =
+
+`count(conversation) + count(major) + count(major_conversation)`
+
+Do not double-count a row. See [E2E_LOCKS.md](./E2E_LOCKS.md) §8.
+
 ## Hard-line collision
 
 ```

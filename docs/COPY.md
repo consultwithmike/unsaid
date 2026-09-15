@@ -377,12 +377,17 @@ Full briefs: [SEO_BRIEFS.md](./SEO_BRIEFS.md).
 
 ---
 
-## 19. Legal routes
+## 19. Legal routes (MVP stubs OK)
 
 - `/privacy`
 - `/terms`
 - `/disclaimer` (short form of legal positioning; also inline on results)
 
+Stub body for privacy/terms until counsel review:
+
+> Full policy forthcoming. Until then: Unsaid identifies differences between the answers you provide. It cannot determine whether a relationship will succeed. You must be 18+. Relationship answers are never sold or used for advertising. Contact {SUPPORT_EMAIL}.
+
+Disclaimer page / results footer uses COPY §2 legal paragraph in full.
 ---
 
 ## 20. Support

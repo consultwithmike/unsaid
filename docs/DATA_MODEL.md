@@ -1,12 +1,13 @@
 # Unsaid — Data Model (MVP)
 
-Companion to [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md).
+Companion to [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md).  
+**Conflict rule:** [E2E_LOCKS.md](./E2E_LOCKS.md) wins.
 
 **Database:** Netlify Database (Postgres) via `@netlify/database`  
-**Migrations:** `netlify/database/migrations/<number>_<slug>/migration.sql`  
-**Auth key:** `profiles.clerk_user_id` (Clerk user id string)
+**Migrations:** `netlify/database/migrations/<number>_<slug>/migration.sql` (lexical apply order)  
+**Auth key:** `profiles.clerk_user_id`
 
-All response/result/payment writes happen in Next.js Route Handlers / Server Actions after `await auth()`. No browser DB access.
+All response/result/payment writes happen server-side after `await auth()`. No browser DB access.
 
 ---
 
@@ -16,12 +17,12 @@ All response/result/payment writes happen in Next.js Route Handlers / Server Act
 | --- | --- | --- |
 | id | uuid PK | |
 | clerk_user_id | text UNIQUE NOT NULL | Clerk `user_…` |
-| email | text NOT NULL | denormalized from Clerk for support/ops |
+| email | text NOT NULL | denormalized from Clerk |
 | first_name | text NOT NULL | |
 | preferred_name | text | optional |
 | pronouns | text | optional |
 | age_confirmed_18 | boolean NOT NULL | |
-| created_at | timestamptz DEFAULT now() | |
+| created_at | timestamptz DEFAULT now() | UTC |
 | deleted_at | timestamptz | soft delete |
 
 ---
@@ -31,17 +32,18 @@ All response/result/payment writes happen in Next.js Route Handlers / Server Act
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | uuid PK | |
-| status | text NOT NULL | created \| active \| awaiting_partner \| ready \| unlocked \| expired \| deleted |
+| status | text NOT NULL | `awaiting_partner` \| `active` \| `ready` \| `unlocked` \| `expired` \| `deleted` — transitions E2E_LOCKS §2 |
 | question_set_version | text NOT NULL | e.g. `2026.09` |
-| relationship_stage | text NOT NULL | |
-| wedding_date | date | optional |
+| relationship_stage | text NOT NULL | enum slugs E2E_LOCKS §1 |
+| wedding_date | date | optional; bare date, no TZ |
+| partner_first_name_pending | text | until B joins |
 | created_by_profile_id | uuid NOT NULL → profiles | |
-| created_at | timestamptz | |
-| expires_at | timestamptz | |
+| created_at | timestamptz | UTC |
+| expires_at | timestamptz | UTC |
 | unlocked_at | timestamptz | |
 | payment_status | text NOT NULL DEFAULT `unpaid` | unpaid \| paid \| refunded — refunded re-locks API to teaser |
 | algorithm_version | text | set when results generated |
-| encrypted_dek | bytea | wrapped per-check data key |
+| encrypted_dek | bytea | layout: `iv(12) \|\| tag(16) \|\| ciphertext` of DEK (E2E_LOCKS §6) |
 | last_activity_at | timestamptz | retention |
 
 ---
@@ -57,9 +59,9 @@ All response/result/payment writes happen in Next.js Route Handlers / Server Act
 | first_name_snapshot | text NOT NULL | |
 | joined_at | timestamptz | |
 | completed_at | timestamptz | |
-| answer_count | int NOT NULL DEFAULT 0 | |
+| answer_count | int NOT NULL DEFAULT 0 | saved required responses; used for progress % |
 
-**Constraints:** UNIQUE `(check_id, profile_id)` · UNIQUE `(check_id, role)` · max 2 participants enforced in app + CHECK/trigger.
+**Constraints:** UNIQUE `(check_id, profile_id)` · UNIQUE `(check_id, role)` · max 2 participants.
 
 ---
 
@@ -70,9 +72,11 @@ All response/result/payment writes happen in Next.js Route Handlers / Server Act
 | id | uuid PK | |
 | check_id | uuid NOT NULL → checks | |
 | token_hash | text UNIQUE NOT NULL | never store raw token |
-| expires_at | timestamptz NOT NULL | 30 days |
+| partner_first_name_pending | text NOT NULL | |
+| expires_at | timestamptz NOT NULL | 30 days UTC |
 | accepted_at | timestamptz | |
 | created_at | timestamptz | |
+| invalidated_at | timestamptz | set when invite replaced |
 
 ---
 
@@ -81,21 +85,24 @@ All response/result/payment writes happen in Next.js Route Handlers / Server Act
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | uuid PK | |
-| code | text NOT NULL | e.g. `MC01` |
+| code | text NOT NULL | e.g. `MC01`, `CP07F` |
 | section | text NOT NULL | |
-| text | text NOT NULL | |
-| intro | text | |
-| response_type | text NOT NULL | AG5 \| YN3 \| ORD \| CAT \| MULTI |
-| response_options | jsonb | |
+| prompt | text NOT NULL | from JSON `text` |
+| response_type | text NOT NULL | AG5 \| ORD \| CAT \| MULTI |
+| options | jsonb | |
 | compatibility_matrix | jsonb | |
 | parent_code | text | follow-ups |
+| show_when | jsonb | from `followUpWhen` / `hiddenUnlessParent` |
+| distance_mode | text | |
+| special_scoring | text | |
 | version | text NOT NULL | question_set_version |
-| display_order | int NOT NULL | |
+| display_order | **numeric** NOT NULL | allows `7.1`, `4.1` |
 | active | boolean NOT NULL DEFAULT true | |
-| prompts | jsonb | 3–4 conversation prompts |
+| conversation_prompts | jsonb | |
 | neutral_description | text | |
+| tone_note | text | optional |
 
-UNIQUE `(code, version)`.
+UNIQUE `(code, version)`. Seed map: **E2E_LOCKS §5**.
 
 ---
 
@@ -109,9 +116,9 @@ Sensitive. Server-only.
 | check_id | uuid NOT NULL | |
 | participant_id | uuid NOT NULL → check_participants | |
 | question_id | uuid NOT NULL → questions | |
-| ciphertext | bytea NOT NULL | AES-256-GCM of `{ answer, followUp? }` |
-| iv | bytea NOT NULL | |
-| auth_tag | bytea NOT NULL | |
+| ciphertext | bytea NOT NULL | AES-256-GCM of `{ answer }` only |
+| iv | bytea NOT NULL | 12 bytes |
+| auth_tag | bytea NOT NULL | 16 bytes |
 | importance | smallint NOT NULL | 1–5 |
 | hard_line | boolean NOT NULL DEFAULT false | |
 | created_at | timestamptz | |
@@ -119,7 +126,7 @@ Sensitive. Server-only.
 
 UNIQUE `(participant_id, question_id)`.
 
-Importance/hard_line stored as columns for scoring; answer value stays encrypted.
+Follow-ups (`CP07F`, `MO04F`) = **separate rows**.
 
 ---
 
@@ -127,19 +134,20 @@ Importance/hard_line stored as columns for scoring; answer value stays encrypted
 
 | Column | Type | Notes |
 | --- | --- | --- |
-| check_id | uuid PK → checks | **PK = idempotency** — concurrent calculate uses `ON CONFLICT DO NOTHING` |
-| algorithm_version | text NOT NULL | e.g. `1.0.0` |
+| check_id | uuid PK → checks | PK = calculate idempotency |
+| algorithm_version | text NOT NULL | |
 | question_set_version | text NOT NULL | |
 | alignment_index | numeric NOT NULL | |
 | aligned_count | int NOT NULL | |
-| minor_count | int NOT NULL | |
-| conversation_count | int NOT NULL | |
-| major_count | int NOT NULL | |
+| minor_count | int NOT NULL | from `slight` |
+| conversation_count | int NOT NULL | classification `conversation` only |
+| major_count | int NOT NULL | `major` + `major_conversation` |
 | hard_line_collision_count | int NOT NULL | |
-| category_scores | jsonb | `[{ sectionId, label, alignmentIndex }]` for results “By topic” |
+| teaser_conversation_count | int NOT NULL | conversation+major+major_conversation (E2E_LOCKS §8) |
+| category_scores | jsonb | `[{ sectionId, label, alignmentIndex }]` |
 | generated_at | timestamptz | |
 
-Calculate path: `SELECT checks FOR UPDATE` then insert results. Never silently recompute. Refunds re-lock access but **do not delete** this row.
+Calculate: `SELECT checks FOR UPDATE` then insert. Refunds re-lock access; **do not delete** this row.
 
 ---
 
@@ -157,7 +165,7 @@ Calculate path: `SELECT checks FOR UPDATE` then insert results. Never silently r
 | discussed_at | timestamptz | |
 | sort_rank | int NOT NULL | |
 
-No answer columns.
+No answer columns. UNIQUE `(check_id, question_id)`.
 
 ---
 
@@ -183,56 +191,35 @@ UNIQUE `(check_id, question_id)`.
 | id | uuid PK | |
 | check_id | uuid NOT NULL | |
 | purchasing_clerk_user_id | text NOT NULL | |
-| stripe_checkout_session | text | |
+| stripe_checkout_session | text UNIQUE | |
 | stripe_payment_intent | text | |
 | amount | int NOT NULL | cents · 2900 |
 | currency | text NOT NULL DEFAULT `usd` | |
-| status | text NOT NULL | |
+| status | text NOT NULL | `open` \| `paid` \| `refunded` \| `expired` |
 | product_version | text | |
 | created_at | timestamptz | |
+
+Partial unique index: at most one row per `check_id` where `status IN ('open','paid')`.
 
 ---
 
 ## Operational
 
 ### reminder_log
-`(check_id, sender_profile_id, sent_at)` — enforce 24h throttle.
+`(check_id, sender_profile_id, sent_at)` — 24h throttle.
 
 ### rate_limits
-| Column | Type | Notes |
-| --- | --- | --- |
-| bucket | text | e.g. `invite_create`, `checkout` |
-| subject | text | profile id / check id / ip hash |
-| window_start | timestamptz | |
-| count | int | |
-
-UNIQUE `(bucket, subject, window_start)`.
+`(bucket, subject, window_start, count)` — E2E_LOCKS §13.
 
 ### analytics_events
-| Column | Type | Notes |
-| --- | --- | --- |
-| id | uuid PK | |
-| event_name | text | allowlist only — see API_CONTRACT §12 |
-| profile_id | uuid | nullable |
-| check_id | uuid | nullable opaque |
-| props | jsonb | scrubbed; no answers/topics |
-| created_at | timestamptz | |
+Allowlist event names only — E2E_LOCKS §11.
 
 ### deletion_queue
-Encrypted blobs / row references scheduled for purge after check/account delete or Clerk `user.deleted`.
-
-### Follow-ups
-Bank codes `CP07F` / `MO04F` are rows in `questions` with `parent_code`. Responses store follow-up answers as **separate rows** on the follow-up `question_id`. Parent ciphertext is scalar AG5 only — never embed MULTI/ORD follow-up arrays in the parent payload.
-
-### Offline / client
-No server table. Client IndexedDB queue per [FLOWS.md](./FLOWS.md) §7.
-
-### Account export
-No separate table — `GET /api/account/export` assembles JSON from profile, checks, own responses (decrypt), payments.
+Encrypted blobs / row refs for purge after delete or Clerk `user.deleted`.
 
 ---
 
-## Migration starter sketch
+## Migration starter
 
 ```sql
 -- netlify/database/migrations/001_init/migration.sql
@@ -249,8 +236,4 @@ CREATE TABLE profiles (
   created_at timestamptz NOT NULL DEFAULT now(),
   deleted_at timestamptz
 );
-
--- additional tables follow in same or subsequent migrations
 ```
-
-Apply order is lexicographic by folder name. Production applies before publish; failure blocks deploy.

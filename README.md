@@ -19,6 +19,7 @@ Private, double-blind premarital compatibility check. Two people answer the same
 
 ## Docs
 
+- [**E2E locks**](docs/E2E_LOCKS.md) — authoritative decisions when docs conflict
 - [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
 - [Flows](docs/FLOWS.md) — invite handoff, Stripe, offline, admin
 - [Copy deck](docs/COPY.md)
