@@ -41,6 +41,6 @@ describe("DEK wrapping and master key validation", () => {
     const encoded = randomBytes(32).toString("base64");
     expect(parseMasterKey(encoded)).toHaveLength(32);
     expect(() => parseMasterKey(randomBytes(31).toString("base64"))).toThrow();
-    expect(() => parseMasterKey(encoded.replace(/\+/g, "-").replace(/\//g, "_"))).toThrow();
+    expect(() => parseMasterKey(encoded.slice(0, -1))).toThrow();
   });
 });

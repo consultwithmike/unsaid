@@ -18,7 +18,7 @@ export interface EncryptedValue {
 export function parseMasterKey(encoded: string): Buffer {
   if (
     typeof encoded !== "string" ||
-    !/^(?:[A-Za-z0-9+/]{4}){10}[A-Za-z0-9+/]{2}==$/.test(encoded)
+    !/^(?:[A-Za-z0-9+/]{4}){10}[A-Za-z0-9+/]{3}=$/.test(encoded)
   ) {
     throw new Error("ANSWER_MASTER_KEY must be standard Base64 encoding 32 bytes");
   }

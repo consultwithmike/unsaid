@@ -13,10 +13,11 @@ const questions = new Map(
 );
 
 function inputFor(raw: (typeof fixture.cases)[number]["questions"][number]): ScoringInput {
+  const { type, ...values } = raw;
   return {
     ...(questions.get(raw.code) ?? {}),
-    ...raw,
-    responseType: raw.type as ScoringInput["responseType"],
+    ...values,
+    responseType: type as ScoringInput["responseType"],
     a: raw.a as ScoringInput["a"],
     b: raw.b as ScoringInput["b"],
   };
