@@ -33,7 +33,13 @@ const isPublicInviteToken = (pathname: string) =>
 export default clerkMiddleware(async (auth, request) => {
   const { pathname } = request.nextUrl;
   if (isPublicRoute(request) || isPublicInviteToken(pathname)) return;
-  await auth.protect();
+
+  // Route Handlers answer with the contract's `UNAUTHORIZED` JSON themselves
+  // (E2E_LOCKS §12), so the middleware must not swallow them into a 404.
+  if (pathname.startsWith("/api/")) return;
+
+  const { userId, redirectToSignIn } = await auth();
+  if (!userId) return redirectToSignIn({ returnBackUrl: request.url });
 });
 
 export const config = {
