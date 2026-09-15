@@ -1,6 +1,7 @@
 import { sql } from "./db";
 import { apiError } from "./errors";
-import { unwrapDek } from "./crypto";
+import { generateInviteToken, hashInviteToken, unwrapDek } from "./crypto";
+import { INVITE_TTL_DAYS, siteUrl } from "./env";
 
 export type CheckStatus =
   | "awaiting_partner"
@@ -181,4 +182,87 @@ export function serializeCheck(context: CheckContext) {
     paymentStatus: check.payment_status,
     unlockedAt: check.unlocked_at,
   };
+}
+
+// ---------------------------------------------------------------------------
+// Invitations (E2E_LOCKS §1, §3)
+// ---------------------------------------------------------------------------
+
+export interface InvitationRow {
+  id: string;
+  check_id: string;
+  token_hash: string;
+  partner_first_name_pending: string;
+  expires_at: string;
+  accepted_at: string | null;
+  created_at: string;
+  invalidated_at: string | null;
+}
+
+export function inviteExpiryFromNow(): Date {
+  return new Date(Date.now() + INVITE_TTL_DAYS * 24 * 60 * 60 * 1000);
+}
+
+export function inviteUrlFor(token: string): string {
+  return `${siteUrl()}/invite/${token}`;
+}
+
+/**
+ * Issues a fresh invitation for a check and invalidates any earlier one. The
+ * raw token is returned exactly once; only its hash is persisted.
+ */
+export async function issueInvitation(
+  checkId: string,
+  partnerFirstName: string,
+): Promise<{ token: string; invitation: InvitationRow }> {
+  const token = generateInviteToken();
+  const expiresAt = inviteExpiryFromNow();
+
+  await sql()`
+    UPDATE invitations
+       SET invalidated_at = now()
+     WHERE check_id = ${checkId}
+       AND accepted_at IS NULL
+       AND invalidated_at IS NULL
+  `;
+
+  const [invitation] = await sql()<InvitationRow>`
+    INSERT INTO invitations
+      (check_id, token_hash, partner_first_name_pending, expires_at)
+    VALUES (
+      ${checkId}, ${hashInviteToken(token)}, ${partnerFirstName},
+      ${expiresAt.toISOString()}
+    )
+    RETURNING id, check_id, token_hash, partner_first_name_pending, expires_at,
+              accepted_at, created_at, invalidated_at
+  `;
+
+  await sql()`
+    UPDATE checks
+       SET partner_first_name_pending = ${partnerFirstName},
+           expires_at = ${expiresAt.toISOString()},
+           last_activity_at = now()
+     WHERE id = ${checkId}
+  `;
+
+  return { token, invitation };
+}
+
+export async function findInvitationByToken(
+  token: string,
+): Promise<InvitationRow | null> {
+  const rows = await sql()<InvitationRow>`
+    SELECT id, check_id, token_hash, partner_first_name_pending, expires_at,
+           accepted_at, created_at, invalidated_at
+      FROM invitations
+     WHERE token_hash = ${hashInviteToken(token)}
+  `;
+  return rows[0] ?? null;
+}
+
+export function assertInvitationUsable(invitation: InvitationRow): void {
+  if (invitation.invalidated_at) apiError("INVITE_EXPIRED");
+  if (new Date(invitation.expires_at).getTime() <= Date.now()) {
+    apiError("INVITE_EXPIRED");
+  }
 }
