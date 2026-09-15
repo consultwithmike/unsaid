@@ -1,0 +1,4092 @@
+{
+  "questionSetVersion": "2026.09",
+  "algorithmVersionCompatible": [
+    "1.0.0"
+  ],
+  "currencyNote": "Importance 1–5 and optional hard line on every answered item.",
+  "sections": [
+    {
+      "id": "marriage_commitment",
+      "title": "Marriage & commitment",
+      "intro": "What marriage means to you—commitment, decisions, openness, and priority.",
+      "durationHint": "8 questions · about 90 seconds"
+    },
+    {
+      "id": "children_parenting",
+      "title": "Children & parenting",
+      "intro": "Whether you want children, when, how many, and how you'd raise them.",
+      "durationHint": "8 questions · about 90 seconds"
+    },
+    {
+      "id": "money",
+      "title": "Money",
+      "intro": "Money disagreements are rarely just about dollars. These questions compare how you expect earning, spending, saving, debt, and generosity to work.",
+      "durationHint": "8 questions · about 90 seconds"
+    },
+    {
+      "id": "faith_values",
+      "title": "Faith & values",
+      "intro": "Faith, spiritual practice, moral frameworks, and how much shared belief matters.",
+      "durationHint": "8 questions · about 90 seconds"
+    },
+    {
+      "id": "sex_affection",
+      "title": "Sex & affection",
+      "intro": "These questions are private. Their purpose is not to define a “normal” relationship. They identify whether your expectations differ.",
+      "durationHint": "8 questions · about 90 seconds"
+    },
+    {
+      "id": "communication_conflict",
+      "title": "Communication & conflict",
+      "intro": "How you want to fight, apologize, cool down, and ask for help.",
+      "durationHint": "8 questions · about 90 seconds"
+    },
+    {
+      "id": "family_boundaries",
+      "title": "Family & boundaries",
+      "intro": "In-laws, holidays, caregiving, friendships, and where the marriage sits relative to family.",
+      "durationHint": "8 questions · about 90 seconds"
+    },
+    {
+      "id": "career_ambition",
+      "title": "Career & ambition",
+      "intro": "Work identity, relocation, hours, risk, and income versus time.",
+      "durationHint": "8 questions · about 90 seconds"
+    },
+    {
+      "id": "home_lifestyle",
+      "title": "Home & lifestyle",
+      "intro": "Where you live, how you live, pets, travel, and the feel of home.",
+      "durationHint": "8 questions · about 90 seconds"
+    },
+    {
+      "id": "roles_responsibilities",
+      "title": "Roles & responsibilities",
+      "intro": "Who does what—chores, childcare, money admin, and mental load.",
+      "durationHint": "8 questions · about 90 seconds"
+    },
+    {
+      "id": "health_habits",
+      "title": "Health & habits",
+      "intro": "Substances, health, sleep, and habits that affect a shared life.",
+      "durationHint": "8 questions · about 90 seconds"
+    },
+    {
+      "id": "future_adversity",
+      "title": "Future & adversity",
+      "intro": "Marriage includes situations neither person can predict. These questions explore expectations about how you would face them.",
+      "durationHint": "8 questions · about 90 seconds"
+    }
+  ],
+  "questions": [
+    {
+      "code": "MC01",
+      "section": "marriage_commitment",
+      "displayOrder": 1,
+      "text": "I intend marriage to be a lifelong commitment except in extraordinary circumstances.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around lifelong commitment.",
+      "prompts": [
+        "What does your ideal picture of lifelong commitment actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MC02",
+      "section": "marriage_commitment",
+      "displayOrder": 2,
+      "text": "Being legally married matters to me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around legal marriage.",
+      "prompts": [
+        "What does your ideal picture of legal marriage actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MC03",
+      "section": "marriage_commitment",
+      "displayOrder": 3,
+      "text": "When would you ideally want to be married?",
+      "responseType": "ORD",
+      "responseOptions": [
+        {
+          "value": "within_1_year",
+          "label": "Within 1 year"
+        },
+        {
+          "value": "1_2_years",
+          "label": "1–2 years"
+        },
+        {
+          "value": "3_5_years",
+          "label": "3–5 years"
+        },
+        {
+          "value": "more_than_5_years",
+          "label": "More than 5 years"
+        },
+        {
+          "value": "unsure",
+          "label": "I'm not sure"
+        }
+      ],
+      "neutralDescription": "Preferred marriage timing differs.",
+      "prompts": [
+        "What does your ideal picture of when you marry actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ord"
+    },
+    {
+      "code": "MC04",
+      "section": "marriage_commitment",
+      "displayOrder": 4,
+      "text": "I expect major life decisions to be made jointly after marriage.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around joint decision-making.",
+      "prompts": [
+        "What does your ideal picture of joint decision-making actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MC05",
+      "section": "marriage_commitment",
+      "displayOrder": 5,
+      "text": "My spouse should become my primary adult relationship, ahead of parents and friends.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around relationship priority.",
+      "prompts": [
+        "What does your ideal picture of relationship priority actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MC06",
+      "section": "marriage_commitment",
+      "displayOrder": 6,
+      "text": "I want a prenuptial agreement before marriage.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around prenuptial agreements.",
+      "prompts": [
+        "What does your ideal picture of prenuptial agreements actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MC07",
+      "section": "marriage_commitment",
+      "displayOrder": 7,
+      "text": "I consider emotional infidelity a serious violation of marriage even if nothing physical happens.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around emotional exclusivity.",
+      "prompts": [
+        "What does your ideal picture of emotional exclusivity actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MC08",
+      "section": "marriage_commitment",
+      "displayOrder": 8,
+      "text": "I expect a high level of openness about phones, messages, online accounts, and digital life.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around digital openness.",
+      "prompts": [
+        "What does your ideal picture of digital openness actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CP01",
+      "section": "children_parenting",
+      "displayOrder": 1,
+      "text": "I want to have children.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around having children.",
+      "prompts": [
+        "What does your ideal picture of having children actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CP02",
+      "section": "children_parenting",
+      "displayOrder": 2,
+      "text": "Ideally, how many children would you want?",
+      "responseType": "ORD",
+      "responseOptions": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "one",
+          "label": "One"
+        },
+        {
+          "value": "two",
+          "label": "Two"
+        },
+        {
+          "value": "three",
+          "label": "Three"
+        },
+        {
+          "value": "four_or_more",
+          "label": "Four or more"
+        },
+        {
+          "value": "dont_care",
+          "label": "I genuinely don't care"
+        },
+        {
+          "value": "unsure",
+          "label": "Unsure"
+        }
+      ],
+      "neutralDescription": "Preferred number of children differs.",
+      "prompts": [
+        "What does your ideal picture of how many children you want actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ord_cp02_dont_care",
+      "specialScoring": "cp02_dont_care"
+    },
+    {
+      "code": "CP03",
+      "section": "children_parenting",
+      "displayOrder": 3,
+      "text": "If we want children, when would you ideally begin trying?",
+      "responseType": "ORD",
+      "responseOptions": [
+        {
+          "value": "immediately",
+          "label": "Immediately after marriage"
+        },
+        {
+          "value": "1_2_years",
+          "label": "Within 1–2 years"
+        },
+        {
+          "value": "3_5_years",
+          "label": "Within 3–5 years"
+        },
+        {
+          "value": "more_than_5",
+          "label": "More than 5 years"
+        },
+        {
+          "value": "unsure",
+          "label": "Unsure"
+        },
+        {
+          "value": "dont_want",
+          "label": "I don't want children"
+        }
+      ],
+      "neutralDescription": "Preferred timing for children differs.",
+      "prompts": [
+        "What does your ideal picture of when to begin trying for children actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ord"
+    },
+    {
+      "code": "CP04",
+      "section": "children_parenting",
+      "displayOrder": 4,
+      "text": "If having biological children were difficult, I would want to pursue fertility treatment.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around fertility treatment.",
+      "prompts": [
+        "What does your ideal picture of fertility treatment actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CP05",
+      "section": "children_parenting",
+      "displayOrder": 5,
+      "text": "I would seriously consider adoption or fostering if biological children were not possible.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around adoption or fostering.",
+      "prompts": [
+        "What does your ideal picture of adoption or fostering actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CP06",
+      "section": "children_parenting",
+      "displayOrder": 6,
+      "text": "What parenting style feels closest to you?",
+      "responseType": "ORD",
+      "responseOptions": [
+        {
+          "value": "very_flexible",
+          "label": "Very flexible"
+        },
+        {
+          "value": "somewhat_flexible",
+          "label": "Somewhat flexible"
+        },
+        {
+          "value": "balanced",
+          "label": "Balanced"
+        },
+        {
+          "value": "somewhat_structured",
+          "label": "Somewhat structured"
+        },
+        {
+          "value": "very_structured",
+          "label": "Very structured"
+        }
+      ],
+      "neutralDescription": "Preferred parenting structure differs.",
+      "prompts": [
+        "What does your ideal picture of parenting style actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ord"
+    },
+    {
+      "code": "CP07",
+      "section": "children_parenting",
+      "displayOrder": 7,
+      "text": "I have strong preferences about how our children should be educated.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around children's education.",
+      "prompts": [
+        "What does your ideal picture of children's education actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": {
+        "importanceMin": null,
+        "answerMin": 4,
+        "followUpCode": "CP07F"
+      },
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CP07F",
+      "section": "children_parenting",
+      "displayOrder": 7.1,
+      "text": "Which education approaches would you want for your children?",
+      "responseType": "MULTI",
+      "responseOptions": [
+        {
+          "value": "public",
+          "label": "Public school"
+        },
+        {
+          "value": "private",
+          "label": "Private school"
+        },
+        {
+          "value": "religious",
+          "label": "Religious school"
+        },
+        {
+          "value": "homeschool",
+          "label": "Homeschool"
+        },
+        {
+          "value": "other",
+          "label": "Other"
+        },
+        {
+          "value": "open",
+          "label": "Open to several"
+        }
+      ],
+      "neutralDescription": "Preferred education approaches differ.",
+      "prompts": [
+        "What does your ideal picture of how children are educated actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": "CP07",
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "multi",
+      "hiddenUnlessParent": {
+        "code": "CP07",
+        "answerMin": 4
+      }
+    },
+    {
+      "code": "CP08",
+      "section": "children_parenting",
+      "displayOrder": 8,
+      "text": "I want one parent to stay home full-time or substantially reduce work while our children are young.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around a parent staying home.",
+      "prompts": [
+        "What does your ideal picture of a parent staying home actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MO01",
+      "section": "money",
+      "displayOrder": 1,
+      "text": "All significant debt should be fully disclosed before marriage.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around debt disclosure.",
+      "prompts": [
+        "What does your ideal picture of debt disclosure actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MO02",
+      "section": "money",
+      "displayOrder": 2,
+      "text": "How should married finances primarily work?",
+      "responseType": "CAT",
+      "responseOptions": [
+        {
+          "value": "fully_combined",
+          "label": "Fully combined"
+        },
+        {
+          "value": "mostly_combined",
+          "label": "Mostly combined with individual spending accounts"
+        },
+        {
+          "value": "half",
+          "label": "Roughly half combined / half separate"
+        },
+        {
+          "value": "mostly_separate",
+          "label": "Mostly separate"
+        },
+        {
+          "value": "fully_separate",
+          "label": "Fully separate"
+        }
+      ],
+      "neutralDescription": "Preferred household finance structure differs.",
+      "prompts": [
+        "What does your ideal picture of how money is shared actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ord_as_cat",
+      "specialScoring": "mo02_ordered"
+    },
+    {
+      "code": "MO03",
+      "section": "money",
+      "displayOrder": 3,
+      "text": "I want us to maintain a household budget.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around household budgeting.",
+      "prompts": [
+        "What does your ideal picture of household budgeting actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MO04",
+      "section": "money",
+      "displayOrder": 4,
+      "text": "I want us to agree before either person makes a large purchase.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around agreeing on large purchases.",
+      "prompts": [
+        "What does your ideal picture of agreeing on large purchases actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": {
+        "answerMin": 3,
+        "followUpCode": "MO04F"
+      },
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MO04F",
+      "section": "money",
+      "displayOrder": 4.1,
+      "text": "What counts as a large purchase?",
+      "responseType": "ORD",
+      "responseOptions": [
+        {
+          "value": "100",
+          "label": "$100"
+        },
+        {
+          "value": "250",
+          "label": "$250"
+        },
+        {
+          "value": "500",
+          "label": "$500"
+        },
+        {
+          "value": "1000",
+          "label": "$1,000"
+        },
+        {
+          "value": "2500",
+          "label": "$2,500"
+        },
+        {
+          "value": "5000_plus",
+          "label": "$5,000+"
+        },
+        {
+          "value": "depends",
+          "label": "Depends on our income"
+        }
+      ],
+      "neutralDescription": "Threshold for a “large purchase” differs.",
+      "prompts": [
+        "What does your ideal picture of what counts as a large purchase actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": "MO04",
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ord",
+      "hiddenUnlessParent": {
+        "code": "MO04",
+        "answerMin": 3
+      }
+    },
+    {
+      "code": "MO05",
+      "section": "money",
+      "displayOrder": 5,
+      "text": "Building savings and investments should take priority over increasing our lifestyle.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around saving versus lifestyle.",
+      "prompts": [
+        "What does your ideal picture of saving versus lifestyle actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MO06",
+      "section": "money",
+      "displayOrder": 6,
+      "text": "I am comfortable carrying debt for things other than a home.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around non-mortgage debt.",
+      "prompts": [
+        "What does your ideal picture of non-mortgage debt actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MO07",
+      "section": "money",
+      "displayOrder": 7,
+      "text": "I expect us to financially support parents or extended family if they need help.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around supporting extended family financially.",
+      "prompts": [
+        "What does your ideal picture of supporting extended family financially actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "MO08",
+      "section": "money",
+      "displayOrder": 8,
+      "text": "Charitable or religious giving should be a regular part of our household finances.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around regular giving.",
+      "prompts": [
+        "What does your ideal picture of regular giving actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FV01",
+      "section": "faith_values",
+      "displayOrder": 1,
+      "text": "Sharing the same faith or spiritual worldview is important to me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around shared faith or worldview.",
+      "prompts": [
+        "What does your ideal picture of shared faith or worldview actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FV02",
+      "section": "faith_values",
+      "displayOrder": 2,
+      "text": "Faith or spirituality should play an active role in our marriage.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around faith in the marriage.",
+      "prompts": [
+        "What does your ideal picture of faith in the marriage actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FV03",
+      "section": "faith_values",
+      "displayOrder": 3,
+      "text": "I expect regular participation in a church, religious community, or spiritual community.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around religious or spiritual community.",
+      "prompts": [
+        "What does your ideal picture of religious or spiritual community actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FV04",
+      "section": "faith_values",
+      "displayOrder": 4,
+      "text": "I want our children raised within a specific faith or spiritual tradition.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around raising children in a faith tradition.",
+      "prompts": [
+        "What does your ideal picture of raising children in a faith tradition actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FV05",
+      "section": "faith_values",
+      "displayOrder": 5,
+      "text": "I expect my spouse and me to make major moral decisions from a shared set of beliefs.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around shared moral frameworks.",
+      "prompts": [
+        "What does your ideal picture of shared moral frameworks actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FV06",
+      "section": "faith_values",
+      "displayOrder": 6,
+      "text": "Political differences between spouses would be difficult for me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around political differences.",
+      "prompts": [
+        "What does your ideal picture of political differences actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FV07",
+      "section": "faith_values",
+      "displayOrder": 7,
+      "text": "My spouse's personal beliefs matter to me even if their behavior toward me does not change.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around a spouse's personal beliefs.",
+      "prompts": [
+        "What does your ideal picture of a spouse's personal beliefs actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FV08",
+      "section": "faith_values",
+      "displayOrder": 8,
+      "text": "If one of us changed our religious or spiritual beliefs significantly, it would seriously affect the marriage.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around major belief changes.",
+      "prompts": [
+        "What does your ideal picture of major belief changes actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "SA01",
+      "section": "sex_affection",
+      "displayOrder": 1,
+      "text": "In a healthy marriage, how often would you ideally expect sexual intimacy?",
+      "responseType": "ORD",
+      "responseOptions": [
+        {
+          "value": "less_than_monthly",
+          "label": "Less than monthly"
+        },
+        {
+          "value": "few_per_month",
+          "label": "A few times per month"
+        },
+        {
+          "value": "weekly",
+          "label": "About weekly"
+        },
+        {
+          "value": "2_3_weekly",
+          "label": "2–3 times per week"
+        },
+        {
+          "value": "4_plus_weekly",
+          "label": "4+ times per week"
+        },
+        {
+          "value": "no_expectation",
+          "label": "I don't have a frequency expectation"
+        }
+      ],
+      "neutralDescription": "Expectations about sexual frequency differ.",
+      "prompts": [
+        "What does “enough” intimacy mean to each of you?",
+        "How would you want to talk about mismatch if it appeared?",
+        "What does your ideal picture of sexual intimacy frequency actually look like?",
+        "Is this a preference or a requirement for you?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ord"
+    },
+    {
+      "code": "SA02",
+      "section": "sex_affection",
+      "displayOrder": 2,
+      "text": "Regular physical affection outside of sex is very important to me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around non-sexual physical affection.",
+      "prompts": [
+        "What does your ideal picture of non-sexual physical affection actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "SA03",
+      "section": "sex_affection",
+      "displayOrder": 3,
+      "text": "I expect sexual exclusivity throughout marriage.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around sexual exclusivity.",
+      "prompts": [
+        "What does your ideal picture of sexual exclusivity actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "SA04",
+      "section": "sex_affection",
+      "displayOrder": 4,
+      "text": "Pornography use by my spouse would seriously bother me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around pornography.",
+      "prompts": [
+        "What does your ideal picture of pornography actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "SA05",
+      "section": "sex_affection",
+      "displayOrder": 5,
+      "text": "I want both spouses to feel comfortable initiating sex.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around initiating sex.",
+      "prompts": [
+        "What does your ideal picture of initiating sex actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "SA06",
+      "section": "sex_affection",
+      "displayOrder": 6,
+      "text": "A prolonged mismatch in sexual desire would be a serious marriage issue for me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around desire mismatch.",
+      "prompts": [
+        "What does your ideal picture of desire mismatch actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "SA07",
+      "section": "sex_affection",
+      "displayOrder": 7,
+      "text": "I would be willing to seek professional help together if sexual intimacy became a persistent problem.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around seeking help for sexual intimacy.",
+      "prompts": [
+        "What does your ideal picture of seeking help for sexual intimacy actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "SA08",
+      "section": "sex_affection",
+      "displayOrder": 8,
+      "text": "Sexual boundaries and expectations should be explicitly discussed rather than assumed.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around discussing sexual boundaries.",
+      "prompts": [
+        "What does your ideal picture of discussing sexual boundaries actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CC01",
+      "section": "communication_conflict",
+      "displayOrder": 1,
+      "text": "When conflict becomes intense, I prefer to take time apart before continuing the conversation.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around cooling off during conflict.",
+      "prompts": [
+        "What does your ideal picture of cooling off during conflict actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CC02",
+      "section": "communication_conflict",
+      "displayOrder": 2,
+      "text": "I want disagreements resolved before going to sleep whenever reasonably possible.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around resolving conflict before sleep.",
+      "prompts": [
+        "What does your ideal picture of resolving conflict before sleep actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CC03",
+      "section": "communication_conflict",
+      "displayOrder": 3,
+      "text": "Raised voices during arguments are unacceptable to me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around raised voices.",
+      "prompts": [
+        "What does your ideal picture of raised voices actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CC04",
+      "section": "communication_conflict",
+      "displayOrder": 4,
+      "text": "Sarcasm or joking during conflict bothers me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around sarcasm during conflict.",
+      "prompts": [
+        "What does your ideal picture of sarcasm during conflict actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CC05",
+      "section": "communication_conflict",
+      "displayOrder": 5,
+      "text": "I need verbal apologies when someone has clearly done something wrong.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around verbal apologies.",
+      "prompts": [
+        "What does your ideal picture of verbal apologies actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CC06",
+      "section": "communication_conflict",
+      "displayOrder": 6,
+      "text": "I am comfortable discussing difficult relationship issues directly rather than waiting for them to pass.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around direct difficult conversations.",
+      "prompts": [
+        "What does your ideal picture of direct difficult conversations actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CC07",
+      "section": "communication_conflict",
+      "displayOrder": 7,
+      "text": "I would be willing to attend couples counseling before our marriage reached a crisis.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around couples counseling.",
+      "prompts": [
+        "What does your ideal picture of couples counseling actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CC08",
+      "section": "communication_conflict",
+      "displayOrder": 8,
+      "text": "Relationship conflicts should generally stay private rather than being discussed with friends or family.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around keeping conflict private.",
+      "prompts": [
+        "What does your ideal picture of keeping conflict private actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FB01",
+      "section": "family_boundaries",
+      "displayOrder": 1,
+      "text": "Our marriage should generally take priority when our spouse and extended family disagree.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around marriage versus extended family.",
+      "prompts": [
+        "What does your ideal picture of marriage versus extended family actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FB02",
+      "section": "family_boundaries",
+      "displayOrder": 2,
+      "text": "I expect to spend major holidays regularly with my family of origin.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around holidays with family of origin.",
+      "prompts": [
+        "What does your ideal picture of holidays with family of origin actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FB03",
+      "section": "family_boundaries",
+      "displayOrder": 3,
+      "text": "I would be willing for one of our parents to live with us if they could no longer live independently.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around a parent living with you.",
+      "prompts": [
+        "What does your ideal picture of a parent living with you actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FB04",
+      "section": "family_boundaries",
+      "displayOrder": 4,
+      "text": "I am comfortable financially supporting members of our extended family.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around financial support for extended family.",
+      "prompts": [
+        "What does your ideal picture of financial support for extended family actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FB05",
+      "section": "family_boundaries",
+      "displayOrder": 5,
+      "text": "Parents and in-laws should have significant involvement in major family decisions.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around in-law involvement in decisions.",
+      "prompts": [
+        "What does your ideal picture of in-law involvement in decisions actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FB06",
+      "section": "family_boundaries",
+      "displayOrder": 6,
+      "text": "I need strong boundaries between our private relationship and our families.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around boundaries with family.",
+      "prompts": [
+        "What does your ideal picture of boundaries with family actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FB07",
+      "section": "family_boundaries",
+      "displayOrder": 7,
+      "text": "I am comfortable maintaining close friendships with people my spouse could potentially view as romantic alternatives.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around close opposite-attraction friendships.",
+      "prompts": [
+        "What does your ideal picture of close opposite-attraction friendships actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FB08",
+      "section": "family_boundaries",
+      "displayOrder": 8,
+      "text": "Remaining close friends with former romantic partners is acceptable to me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around friendship with ex-partners.",
+      "prompts": [
+        "What does your ideal picture of friendship with ex-partners actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CA01",
+      "section": "career_ambition",
+      "displayOrder": 1,
+      "text": "My career is a major part of my identity.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around career and identity.",
+      "prompts": [
+        "What does your ideal picture of career and identity actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CA02",
+      "section": "career_ambition",
+      "displayOrder": 2,
+      "text": "I would relocate for my spouse's career if the opportunity were significant enough.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around relocating for a spouse's career.",
+      "prompts": [
+        "What does your ideal picture of relocating for a spouse's career actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CA03",
+      "section": "career_ambition",
+      "displayOrder": 3,
+      "text": "I expect my spouse to relocate for my career if the opportunity were significant enough.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around expecting a spouse to relocate.",
+      "prompts": [
+        "What does your ideal picture of expecting a spouse to relocate actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CA04",
+      "section": "career_ambition",
+      "displayOrder": 4,
+      "text": "I am comfortable with periods when one spouse works substantially more hours than the other.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around uneven work hours.",
+      "prompts": [
+        "What does your ideal picture of uneven work hours actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CA05",
+      "section": "career_ambition",
+      "displayOrder": 5,
+      "text": "I would be comfortable taking substantial financial risk to start a business.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around business risk.",
+      "prompts": [
+        "What does your ideal picture of business risk actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CA06",
+      "section": "career_ambition",
+      "displayOrder": 6,
+      "text": "I want both spouses to continue pursuing careers after having children.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around careers after children.",
+      "prompts": [
+        "What does your ideal picture of careers after children actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CA07",
+      "section": "career_ambition",
+      "displayOrder": 7,
+      "text": "Achieving a high household income is important to me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around household income goals.",
+      "prompts": [
+        "What does your ideal picture of household income goals actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "CA08",
+      "section": "career_ambition",
+      "displayOrder": 8,
+      "text": "I would willingly choose more family time even if it meant earning substantially less money.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around family time versus income.",
+      "prompts": [
+        "What does your ideal picture of family time versus income actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HL01",
+      "section": "home_lifestyle",
+      "displayOrder": 1,
+      "text": "Owning a home is an important life goal for me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around homeownership.",
+      "prompts": [
+        "What does your ideal picture of homeownership actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HL02",
+      "section": "home_lifestyle",
+      "displayOrder": 2,
+      "text": "Where would you most like to live long term?",
+      "responseType": "CAT",
+      "responseOptions": [
+        {
+          "value": "major_city",
+          "label": "Major city"
+        },
+        {
+          "value": "suburb",
+          "label": "Suburb"
+        },
+        {
+          "value": "small_town",
+          "label": "Small town"
+        },
+        {
+          "value": "rural",
+          "label": "Rural area"
+        },
+        {
+          "value": "no_preference",
+          "label": "No strong preference"
+        }
+      ],
+      "neutralDescription": "Long-term living preferences differ.",
+      "prompts": [
+        "What does your ideal picture of where you live long term actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": {
+        "major_city": {
+          "major_city": 0,
+          "suburb": 0.25,
+          "small_town": 0.5,
+          "rural": 0.75,
+          "no_preference": 0.25
+        },
+        "suburb": {
+          "major_city": 0.25,
+          "suburb": 0,
+          "small_town": 0.25,
+          "rural": 0.5,
+          "no_preference": 0.25
+        },
+        "small_town": {
+          "major_city": 0.5,
+          "suburb": 0.25,
+          "small_town": 0,
+          "rural": 0.25,
+          "no_preference": 0.25
+        },
+        "rural": {
+          "major_city": 0.75,
+          "suburb": 0.5,
+          "small_town": 0.25,
+          "rural": 0,
+          "no_preference": 0.25
+        },
+        "no_preference": {
+          "major_city": 0.25,
+          "suburb": 0.25,
+          "small_town": 0.25,
+          "rural": 0.25,
+          "no_preference": 0
+        }
+      },
+      "distanceMode": "cat_matrix",
+      "specialScoring": "hl02_matrix"
+    },
+    {
+      "code": "HL03",
+      "section": "home_lifestyle",
+      "displayOrder": 3,
+      "text": "How geographically flexible are you?",
+      "responseType": "ORD",
+      "responseOptions": [
+        {
+          "value": "stay",
+          "label": "I strongly want to remain where I currently live"
+        },
+        {
+          "value": "region",
+          "label": "I would move within my region"
+        },
+        {
+          "value": "country",
+          "label": "I would move anywhere in my country"
+        },
+        {
+          "value": "international",
+          "label": "I would move internationally"
+        },
+        {
+          "value": "no_preference",
+          "label": "I have no strong preference"
+        }
+      ],
+      "neutralDescription": "Geographic flexibility differs.",
+      "prompts": [
+        "What does your ideal picture of geographic flexibility actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ord"
+    },
+    {
+      "code": "HL04",
+      "section": "home_lifestyle",
+      "displayOrder": 4,
+      "text": "Keeping our home very clean and organized is important to me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around home cleanliness.",
+      "prompts": [
+        "What does your ideal picture of home cleanliness actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HL05",
+      "section": "home_lifestyle",
+      "displayOrder": 5,
+      "text": "I want pets to be part of our household.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around pets.",
+      "prompts": [
+        "What does your ideal picture of pets actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HL06",
+      "section": "home_lifestyle",
+      "displayOrder": 6,
+      "text": "I want our home to be a place where friends and family visit frequently.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around a social home.",
+      "prompts": [
+        "What does your ideal picture of a social home actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HL07",
+      "section": "home_lifestyle",
+      "displayOrder": 7,
+      "text": "Travel should be a significant part of our lifestyle.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around travel.",
+      "prompts": [
+        "What does your ideal picture of travel actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HL08",
+      "section": "home_lifestyle",
+      "displayOrder": 8,
+      "text": "I prefer spending money on experiences rather than possessions.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around experiences versus possessions.",
+      "prompts": [
+        "What does your ideal picture of experiences versus possessions actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "RR01",
+      "section": "roles_responsibilities",
+      "displayOrder": 1,
+      "text": "Household work should generally be divided as evenly as possible.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around dividing household work.",
+      "prompts": [
+        "What does your ideal picture of dividing household work actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "RR02",
+      "section": "roles_responsibilities",
+      "displayOrder": 2,
+      "text": "Traditional gender roles should influence how responsibilities are divided in marriage.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around gender roles in responsibilities.",
+      "prompts": [
+        "What does your ideal picture of gender roles in responsibilities actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "RR03",
+      "section": "roles_responsibilities",
+      "displayOrder": 3,
+      "text": "The spouse working fewer paid hours should generally perform more household work.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around unpaid work and paid hours.",
+      "prompts": [
+        "What does your ideal picture of unpaid work and paid hours actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "RR04",
+      "section": "roles_responsibilities",
+      "displayOrder": 4,
+      "text": "Both spouses should know the household's financial situation in detail.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around shared financial visibility.",
+      "prompts": [
+        "What does your ideal picture of shared financial visibility actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "RR05",
+      "section": "roles_responsibilities",
+      "displayOrder": 5,
+      "text": "Both parents should participate substantially in daily childcare.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around daily childcare participation.",
+      "prompts": [
+        "What does your ideal picture of daily childcare participation actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "RR06",
+      "section": "roles_responsibilities",
+      "displayOrder": 6,
+      "text": "I am comfortable paying for cleaning, childcare, lawn care, or other household help when we can afford it.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around paid household help.",
+      "prompts": [
+        "What does your ideal picture of paid household help actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "RR07",
+      "section": "roles_responsibilities",
+      "displayOrder": 7,
+      "text": "Meal planning, appointments, birthdays, school obligations, and similar “mental load” tasks should be deliberately shared.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around sharing mental load.",
+      "prompts": [
+        "What does your ideal picture of sharing mental load actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "RR08",
+      "section": "roles_responsibilities",
+      "displayOrder": 8,
+      "text": "If one spouse became overwhelmed, I would expect responsibilities to change temporarily even if the division became unequal.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around flexing responsibilities under stress.",
+      "prompts": [
+        "What does your ideal picture of flexing responsibilities under stress actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HH01",
+      "section": "health_habits",
+      "displayOrder": 1,
+      "text": "Regular alcohol use by my spouse is acceptable to me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around alcohol use.",
+      "prompts": [
+        "What does your ideal picture of alcohol use actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HH02",
+      "section": "health_habits",
+      "displayOrder": 2,
+      "text": "Recreational drug use by my spouse is acceptable to me where legal.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around recreational drug use.",
+      "prompts": [
+        "What does your ideal picture of recreational drug use actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HH03",
+      "section": "health_habits",
+      "displayOrder": 3,
+      "text": "Nicotine or tobacco use by my spouse is acceptable to me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around nicotine or tobacco.",
+      "prompts": [
+        "What does your ideal picture of nicotine or tobacco actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HH04",
+      "section": "health_habits",
+      "displayOrder": 4,
+      "text": "Maintaining physical health and fitness should be an active household priority.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around health and fitness.",
+      "prompts": [
+        "What does your ideal picture of health and fitness actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HH05",
+      "section": "health_habits",
+      "displayOrder": 5,
+      "text": "I expect my spouse to seek medical or mental-health care when a persistent problem is affecting our relationship or family.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around seeking medical or mental-health care.",
+      "prompts": [
+        "What does your ideal picture of seeking medical or mental-health care actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HH06",
+      "section": "health_habits",
+      "displayOrder": 6,
+      "text": "Gambling for money is acceptable entertainment in moderation.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around gambling.",
+      "prompts": [
+        "What does your ideal picture of gambling actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HH07",
+      "section": "health_habits",
+      "displayOrder": 7,
+      "text": "Having similar sleep schedules is important to me.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around sleep schedules.",
+      "prompts": [
+        "What does your ideal picture of sleep schedules actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "HH08",
+      "section": "health_habits",
+      "displayOrder": 8,
+      "text": "Significant changes in a spouse's appearance or weight would affect my attraction.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around attraction and appearance change.",
+      "prompts": [
+        "What does your ideal picture of attraction and appearance change actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5",
+      "toneNote": "Do not flag with judgmental language."
+    },
+    {
+      "code": "FA01",
+      "section": "future_adversity",
+      "displayOrder": 1,
+      "text": "If my spouse became seriously ill or disabled, I would expect us to substantially reorganize our lives around their care.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around care during serious illness.",
+      "prompts": [
+        "What does your ideal picture of care during serious illness actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FA02",
+      "section": "future_adversity",
+      "displayOrder": 2,
+      "text": "If one of us lost our job, I would be comfortable significantly reducing our lifestyle for an extended period.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around job loss and lifestyle.",
+      "prompts": [
+        "What does your ideal picture of job loss and lifestyle actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FA03",
+      "section": "future_adversity",
+      "displayOrder": 3,
+      "text": "If we discovered we could not have biological children, I believe we could build a fulfilling marriage without them.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around marriage without biological children.",
+      "prompts": [
+        "What does your ideal picture of marriage without biological children actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FA04",
+      "section": "future_adversity",
+      "displayOrder": 4,
+      "text": "If one spouse wanted to return to school or completely change careers, I would be open to temporary financial sacrifice.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around career change sacrifice.",
+      "prompts": [
+        "What does your ideal picture of career change sacrifice actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FA05",
+      "section": "future_adversity",
+      "displayOrder": 5,
+      "text": "I would be willing to care for an aging parent even if it substantially changed our lifestyle.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around caring for an aging parent.",
+      "prompts": [
+        "What does your ideal picture of caring for an aging parent actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FA06",
+      "section": "future_adversity",
+      "displayOrder": 6,
+      "text": "If our marriage became deeply unhappy, I would want to pursue counseling or other help before considering separation.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around help before separation.",
+      "prompts": [
+        "What does your ideal picture of help before separation actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FA07",
+      "section": "future_adversity",
+      "displayOrder": 7,
+      "text": "I believe spouses should remain committed through major financial setbacks such as bankruptcy or business failure.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around commitment through financial setbacks.",
+      "prompts": [
+        "What does your ideal picture of commitment through financial setbacks actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    },
+    {
+      "code": "FA08",
+      "section": "future_adversity",
+      "displayOrder": 8,
+      "text": "If we discovered a serious incompatibility after marriage, I would rather confront it directly than avoid the issue to preserve peace.",
+      "responseType": "AG5",
+      "responseOptions": [
+        {
+          "value": 1,
+          "label": "Strongly disagree"
+        },
+        {
+          "value": 2,
+          "label": "Disagree"
+        },
+        {
+          "value": 3,
+          "label": "Unsure / neutral"
+        },
+        {
+          "value": 4,
+          "label": "Agree"
+        },
+        {
+          "value": 5,
+          "label": "Strongly agree"
+        }
+      ],
+      "neutralDescription": "Expectations differ around confronting incompatibility.",
+      "prompts": [
+        "What does your ideal picture of confronting incompatibility actually look like?",
+        "Is this a preference or a requirement for you?",
+        "Has either person's position changed before—and what caused that?",
+        "What would happen if neither person changed their mind?"
+      ],
+      "parentCode": null,
+      "followUpWhen": null,
+      "compatibilityMatrix": null,
+      "distanceMode": "ag5"
+    }
+  ],
+  "scoringNotes": {
+    "cp02_dont_care": "If either answer is dont_care AND that participant's importance <= 3, distance = min(ordDistance, 0.25). If importance >= 4, use normal ORD including dont_care index.",
+    "mo02_ordered": "Treat CAT options as ordered continuum; use ORD distance.",
+    "hl02_matrix": "Use compatibilityMatrix; no_preference is 0.25 from all others unless identical.",
+    "hardLineUi": "Show hard-line toggle only when importance >= 4. Never disclose who set hard line in results."
+  }
+}

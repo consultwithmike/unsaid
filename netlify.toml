@@ -1,0 +1,16 @@
+# Netlify — Next.js is auto-detected (OpenNext). Keep this minimal.
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Database migrations path is conventional: netlify/database/migrations/
+# Scheduled retention:
+[functions]
+  directory = "netlify/functions"
+
+# Example schedule (enable when function exists):
+# [functions."retention-cleanup"]
+#   schedule = "@daily"

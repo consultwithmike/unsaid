@@ -1,0 +1,12 @@
+{
+  "name": "unsaid",
+  "private": true,
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "packageManager": "npm@10",
+  "scripts": {
+    "validate:content": "node scripts/validate-content.mjs",
+    "generate:questions": "node scripts/generate-question-bank.mjs"
+  }
+}

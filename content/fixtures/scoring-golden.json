@@ -1,0 +1,99 @@
+{
+  "fixtureVersion": "1.0.0",
+  "algorithmVersion": "1.0.0",
+  "questionSetVersion": "2026.09",
+  "cases": [
+    {
+      "id": "identical_ag5_high_importance",
+      "questions": [
+        {
+          "code": "MC01",
+          "type": "AG5",
+          "a": { "answer": 5, "importance": 5, "hardLine": false },
+          "b": { "answer": 5, "importance": 5, "hardLine": false }
+        }
+      ],
+      "expect": { "distance": 0, "impact": 0, "classification": "aligned", "hardLineCollision": false }
+    },
+    {
+      "id": "ag5_max_distance",
+      "questions": [
+        {
+          "code": "MC01",
+          "type": "AG5",
+          "a": { "answer": 1, "importance": 5, "hardLine": true },
+          "b": { "answer": 5, "importance": 5, "hardLine": false }
+        }
+      ],
+      "expect": { "distance": 1, "impact": 10, "classification": "major_conversation", "hardLineCollision": true }
+    },
+    {
+      "id": "ag5_mid_no_hard_line",
+      "questions": [
+        {
+          "code": "MO03",
+          "type": "AG5",
+          "a": { "answer": 2, "importance": 3, "hardLine": false },
+          "b": { "answer": 4, "importance": 3, "hardLine": false }
+        }
+      ],
+      "expect": { "distance": 0.5, "impact": 1.5, "classification": "conversation", "hardLineCollision": false }
+    },
+    {
+      "id": "cp02_dont_care_low_importance",
+      "questions": [
+        {
+          "code": "CP02",
+          "type": "ORD",
+          "special": "cp02_dont_care",
+          "a": { "answer": "dont_care", "importance": 2, "hardLine": false },
+          "b": { "answer": "two", "importance": 5, "hardLine": false }
+        }
+      ],
+      "expect": { "distanceMax": 0.25, "hardLineCollision": false }
+    },
+    {
+      "id": "cp02_dont_care_essential_uses_full_ord",
+      "questions": [
+        {
+          "code": "CP02",
+          "type": "ORD",
+          "special": "cp02_dont_care",
+          "a": { "answer": "dont_care", "importance": 5, "hardLine": false },
+          "b": { "answer": "none", "importance": 5, "hardLine": false }
+        }
+      ],
+      "expect": { "distanceMin": 0.25, "note": "Normal ORD including dont_care index; exact value depends on option order in bank" }
+    },
+    {
+      "id": "multi_jaccard_partial",
+      "questions": [
+        {
+          "code": "CP07F",
+          "type": "MULTI",
+          "a": { "answer": ["public", "private"], "importance": 4, "hardLine": false },
+          "b": { "answer": ["public", "homeschool"], "importance": 4, "hardLine": false }
+        }
+      ],
+      "expect": { "distance": 0.6667, "tolerance": 0.01, "classification": "conversation" }
+    },
+    {
+      "id": "overall_index_two_weighted",
+      "questions": [
+        {
+          "code": "A",
+          "type": "AG5",
+          "a": { "answer": 5, "importance": 5, "hardLine": false },
+          "b": { "answer": 5, "importance": 5, "hardLine": false }
+        },
+        {
+          "code": "B",
+          "type": "AG5",
+          "a": { "answer": 1, "importance": 5, "hardLine": false },
+          "b": { "answer": 5, "importance": 5, "hardLine": false }
+        }
+      ],
+      "expect": { "alignmentIndex": 50, "note": "Equal weights; mean distance 0.5 → index 50" }
+    }
+  ]
+}
