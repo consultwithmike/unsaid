@@ -66,11 +66,6 @@ export interface CheckContext {
   participants: ParticipantRow[];
 }
 
-const CHECK_COLUMNS = `id, status, question_set_version, relationship_stage,
-  wedding_date, partner_first_name_pending, created_by_profile_id, created_at,
-  expires_at, unlocked_at, payment_status, algorithm_version, encrypted_dek,
-  last_activity_at, deleted_at`;
-
 export async function findCheck(checkId: string): Promise<CheckRow | null> {
   const rows = await sql()<CheckRow>`
     SELECT id, status, question_set_version, relationship_stage, wedding_date,

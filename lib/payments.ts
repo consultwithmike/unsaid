@@ -23,10 +23,6 @@ export interface PaymentRow {
   created_at: string;
 }
 
-const PAYMENT_COLUMNS = `id, check_id, purchasing_clerk_user_id,
-  stripe_checkout_session, stripe_payment_intent, amount, currency, status,
-  product_version, session_expires_at, checkout_url, created_at`;
-
 export async function findActivePayment(checkId: string): Promise<PaymentRow | null> {
   const rows = await sql()<PaymentRow>`
     SELECT id, check_id, purchasing_clerk_user_id, stripe_checkout_session,
@@ -263,4 +259,3 @@ export async function applySessionExpired(
   `;
 }
 
-export { PAYMENT_COLUMNS };
