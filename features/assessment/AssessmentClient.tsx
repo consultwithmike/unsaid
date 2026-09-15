@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { OfflineBanner } from "@/components/ui/OfflineBanner";
 import { apiGet, apiPost } from "@/lib/api-client";
-import { getSectionById } from "@/lib/questions";
+import { getSectionById } from "@/lib/question-bank";
 import {
   enqueuePendingResponse,
   flushPendingResponses,
@@ -121,12 +121,14 @@ export function AssessmentClient({ checkId }: { checkId: string }) {
     return <div className="container-content py-20 text-center text-[var(--color-ink)]/50">Loading…</div>;
   }
 
+  const showOfflineBanner = !isOnline || queueSize > 0;
+
   if (step.kind === "intro") {
     const section = getSectionById(step.sectionId);
     if (!section) return null;
     return (
       <div className="flex min-h-[70vh] flex-col">
-        {!isOnline && <OfflineBanner />}
+        {showOfflineBanner && <OfflineBanner />}
         <div className="container-content flex flex-1 flex-col items-center justify-center gap-4 text-center">
           <h1 className="font-display text-[28px]">{section.title}</h1>
           <p className="max-w-[440px] text-[17px] text-[var(--color-ink)]/75">
@@ -146,7 +148,7 @@ export function AssessmentClient({ checkId }: { checkId: string }) {
 
     return (
       <div className="flex min-h-[70vh] flex-col">
-        {!isOnline && <OfflineBanner />}
+        {showOfflineBanner && <OfflineBanner />}
         <div className="container-content flex flex-1 flex-col items-center justify-center gap-4 text-center">
           <h1 className="font-display text-[28px]">{section?.title} done.</h1>
           <p className="text-[var(--color-ink)]/75">
@@ -198,7 +200,7 @@ export function AssessmentClient({ checkId }: { checkId: string }) {
 
   return (
     <div className="flex min-h-[70vh] flex-col">
-      {!isOnline && <OfflineBanner />}
+      {showOfflineBanner && <OfflineBanner />}
       <div className="container-content flex-1 py-8">
         <p className="text-sm font-medium text-[var(--color-rose)]">
           {section?.title} · {indexInSection} of {sectionSize}

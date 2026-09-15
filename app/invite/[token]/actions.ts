@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { safeAuth } from "@/lib/auth";
+import { safeAuth } from "@/lib/ui-auth";
 
 const PENDING_INVITE_COOKIE = "unsaid_pending_invite";
 

@@ -2,7 +2,7 @@ import {
   buildQuestionWalk,
   getSections,
   type QuestionBankEntry,
-} from "@/lib/questions";
+} from "@/lib/question-bank";
 
 export type AnswerValue = number | string | string[];
 

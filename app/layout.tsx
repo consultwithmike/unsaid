@@ -28,21 +28,33 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const body = (
+    <html lang="en">
+      <body className={`${newsreader.variable} ${inter.variable} antialiased`}>
+        <div className="flex min-h-screen flex-col">
+          <SiteHeader />
+          <main className="flex-1">{children}</main>
+          <SiteFooter />
+        </div>
+      </body>
+    </html>
+  );
+
+  // Clerk's keyless dev mode only kicks in under `next dev`; without a real
+  // publishable key, `next build` prerendering throws. Skip the provider
+  // (auth-dependent chrome degrades to signed-out) so builds stay green
+  // until Clerk env vars are configured for this deploy.
+  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
+    return body;
+  }
+
   return (
     <ClerkProvider
       signInUrl="/sign-in"
       signInFallbackRedirectUrl="/invite/continue"
       signUpFallbackRedirectUrl="/invite/continue"
     >
-      <html lang="en">
-        <body className={`${newsreader.variable} ${inter.variable} antialiased`}>
-          <div className="flex min-h-screen flex-col">
-            <SiteHeader />
-            <main className="flex-1">{children}</main>
-            <SiteFooter />
-          </div>
-        </body>
-      </html>
+      {body}
     </ClerkProvider>
   );
 }

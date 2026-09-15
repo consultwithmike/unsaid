@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/brand/Wordmark";
-import { safeAuth } from "@/lib/auth";
+import { safeAuth } from "@/lib/ui-auth";
 
 export async function SiteHeader() {
   const { userId } = await safeAuth();

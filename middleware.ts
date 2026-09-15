@@ -1,10 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 
 /**
- * Public paths — docs/API_CONTRACT.md §2. Everything else requires auth.
- * `/invite/continue` is intentionally NOT public even though it's under
- * `/invite/*` — the matcher below only allows the token page.
+ * Public paths — API_CONTRACT §2.
+ *
+ * `/invite/[^/]+$` matches the token page only: `/invite/continue` stays
+ * auth-required (E2E_LOCKS §3).
  */
 const isPublicRoute = createRouteMatcher([
   "/",
@@ -12,28 +12,33 @@ const isPublicRoute = createRouteMatcher([
   "/terms",
   "/disclaimer",
   "/sign-in(.*)",
-  "/invite/([^/]+)$",
-  "/questions-before-marriage",
-  "/premarital-compatibility",
-  "/money-before-marriage",
-  "/questions-about-kids-before-marriage",
-  "/sex-before-marriage-conversations",
-  "/faith-and-marriage",
-  "/questions-for-engaged-couples",
+  "/sign-up(.*)",
+  "/questions-before-marriage(.*)",
+  "/premarital-questions(.*)",
+  "/before-you-get-married(.*)",
+  "/marriage-expectations(.*)",
+  "/money-conversations-before-marriage(.*)",
+  "/children-conversations-before-marriage(.*)",
+  "/premarital-counseling-alternative(.*)",
   "/api/stripe/webhook",
   "/api/clerk/webhook",
   "/api/health",
+  "/robots.txt",
+  "/sitemap.xml",
 ]);
 
-export default clerkMiddleware(async (authFn, req) => {
-  if (isPublicRoute(req)) {
-    return NextResponse.next();
-  }
-  await authFn.protect();
+const isPublicInviteToken = (pathname: string) =>
+  /^\/invite\/[^/]+$/.test(pathname) && pathname !== "/invite/continue";
+
+export default clerkMiddleware(async (auth, request) => {
+  const { pathname } = request.nextUrl;
+  if (isPublicRoute(request) || isPublicInviteToken(pathname)) return;
+  await auth.protect();
 });
 
 export const config = {
   matcher: [
+    // Skip Next internals and static files unless they appear in search params.
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
     "/(api|trpc)(.*)",
   ],

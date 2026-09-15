@@ -1,6 +1,6 @@
 "use client";
 
-import type { QuestionBankEntry } from "@/lib/questions";
+import type { QuestionBankEntry } from "@/lib/question-bank";
 
 type AnswerValue = number | string | string[] | undefined;
 
