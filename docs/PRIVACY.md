@@ -2,14 +2,18 @@
 
 Relationship answers are unusually sensitive. Treat them as such.
 
+**Auth:** Clerk sessions verified server-side (`auth()`).  
+**Storage:** Netlify Database; encrypted answer payloads; no browser DB access.
+
 ## Invariants
 
 1. The client never receives partner answers except after **mutual reveal** for that question.
 2. Results APIs return differences, severity, prompts, hard-line-collision **boolean**—never raw partner values.
-3. Encryption keys never ship to the browser.
+3. Encryption keys never ship to the browser (`ANSWER_MASTER_KEY` only in Netlify env / server).
 4. Email subjects / push / SMS never include sensitive topics (“children”, “sex”, faith specifics, etc.).
 5. Analytics never include answers, importance, hard lines, or mismatch topics.
 6. Admin cannot casually browse plaintext answers.
+7. Clerk user ids are the only auth foreign keys; do not trust client-supplied identity fields.
 
 ## Acknowledge inference
 

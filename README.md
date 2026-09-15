@@ -6,13 +6,24 @@ Private, double-blind premarital compatibility check. Two people answer the same
 
 **$29 per couple · No subscription**
 
+## Stack (locked)
+
+| Layer | Choice |
+| --- | --- |
+| App | Next.js App Router |
+| Host | Netlify (OpenNext) |
+| Auth | Clerk (email OTP) |
+| DB | Netlify Database (Postgres) |
+| Pay | Stripe Checkout |
+| Email | Resend |
+
 ## Docs
 
-- [Implementation plan](docs/IMPLEMENTATION_PLAN.md) — phased MVP build order
+- [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
 - [Data model](docs/DATA_MODEL.md)
 - [Scoring](docs/SCORING.md)
 - [Privacy](docs/PRIVACY.md)
 
-## Stack (planned)
+## Deploy rule
 
-React · TypeScript · Vite · Netlify · Supabase · Stripe · Resend
+We only build what Netlify can run: Next.js App Router + `@netlify/database` migrations + Clerk + Stripe webhooks on Route Handlers.

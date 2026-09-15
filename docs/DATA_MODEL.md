@@ -1,182 +1,225 @@
 # Unsaid — Data Model (MVP)
 
-Companion to `IMPLEMENTATION_PLAN.md`. Schema names are definitive for Phase 0 migrations.
+Companion to [IMPLEMENTATION_PLAN.md](./IMPLEMENTATION_PLAN.md).
 
-## Auth-linked
+**Database:** Netlify Database (Postgres) via `@netlify/database`  
+**Migrations:** `netlify/database/migrations/<number>_<slug>/migration.sql`  
+**Auth key:** `profiles.clerk_user_id` (Clerk user id string)
 
-### `profiles`
+All response/result/payment writes happen in Next.js Route Handlers / Server Actions after `await auth()`. No browser DB access.
+
+---
+
+## profiles
+
 | Column | Type | Notes |
 | --- | --- | --- |
-| user_id | uuid PK → auth.users | |
-| first_name | text not null | |
+| id | uuid PK | |
+| clerk_user_id | text UNIQUE NOT NULL | Clerk `user_…` |
+| email | text NOT NULL | denormalized from Clerk for support/ops |
+| first_name | text NOT NULL | |
 | preferred_name | text | optional |
 | pronouns | text | optional |
-| age_confirmed_18 | boolean not null | |
-| created_at | timestamptz | |
+| age_confirmed_18 | boolean NOT NULL | |
+| created_at | timestamptz DEFAULT now() | |
 | deleted_at | timestamptz | soft delete |
 
-## Checks
+---
 
-### `checks`
+## checks
+
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | uuid PK | |
-| status | text | created \| active \| awaiting_partner \| ready \| unlocked \| expired \| deleted |
-| question_set_version | text | e.g. `2026.09` |
-| relationship_stage | text | seriously_dating \| discussing_engagement \| engaged \| wedding_scheduled \| other |
+| status | text NOT NULL | created \| active \| awaiting_partner \| ready \| unlocked \| expired \| deleted |
+| question_set_version | text NOT NULL | e.g. `2026.09` |
+| relationship_stage | text NOT NULL | |
 | wedding_date | date | optional |
-| created_by | uuid → auth.users | |
+| created_by_profile_id | uuid NOT NULL → profiles | |
 | created_at | timestamptz | |
-| expires_at | timestamptz | invite/check TTL |
+| expires_at | timestamptz | |
 | unlocked_at | timestamptz | |
-| payment_status | text | unpaid \| paid \| refunded |
+| payment_status | text NOT NULL DEFAULT `unpaid` | unpaid \| paid \| refunded |
 | algorithm_version | text | set when results generated |
 | encrypted_dek | bytea | wrapped per-check data key |
-| last_activity_at | timestamptz | retention job |
+| last_activity_at | timestamptz | retention |
 
-### `check_participants`
+---
+
+## check_participants
+
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | uuid PK | |
-| check_id | uuid FK | |
-| user_id | uuid FK | |
-| role | text | `A` \| `B` |
-| first_name_snapshot | text | frozen display name |
+| check_id | uuid NOT NULL → checks | |
+| profile_id | uuid NOT NULL → profiles | |
+| role | text NOT NULL | `A` \| `B` |
+| first_name_snapshot | text NOT NULL | |
 | joined_at | timestamptz | |
 | completed_at | timestamptz | |
-| answer_count | int default 0 | denormalized progress |
+| answer_count | int NOT NULL DEFAULT 0 | |
 
-**Constraints:** unique `(check_id, user_id)` · max 2 rows per check (enforced in Function + trigger).
+**Constraints:** UNIQUE `(check_id, profile_id)` · UNIQUE `(check_id, role)` · max 2 participants enforced in app + CHECK/trigger.
 
-### `invitations`
+---
+
+## invitations
+
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | uuid PK | |
-| check_id | uuid FK | |
-| token_hash | text unique | never store raw token |
-| expires_at | timestamptz | 30 days |
+| check_id | uuid NOT NULL → checks | |
+| token_hash | text UNIQUE NOT NULL | never store raw token |
+| expires_at | timestamptz NOT NULL | 30 days |
 | accepted_at | timestamptz | |
 | created_at | timestamptz | |
 
-Single active invitation per check for MVP. Once B begins answering, A cannot replace partner.
+---
 
-## Questions
+## questions
 
-### `questions`
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | uuid PK | |
-| code | text | e.g. `MC01` |
-| section | text | |
-| text | text | |
-| intro | text | optional section/question intro |
-| response_type | text | AG5 \| YN3 \| ORD \| CAT \| MULTI |
+| code | text NOT NULL | e.g. `MC01` |
+| section | text NOT NULL | |
+| text | text NOT NULL | |
+| intro | text | |
+| response_type | text NOT NULL | AG5 \| YN3 \| ORD \| CAT \| MULTI |
 | response_options | jsonb | |
-| compatibility_matrix | jsonb | CAT / specials |
+| compatibility_matrix | jsonb | |
 | parent_code | text | follow-ups |
-| version | text | question_set_version |
-| display_order | int | |
-| active | boolean | |
+| version | text NOT NULL | question_set_version |
+| display_order | int NOT NULL | |
+| active | boolean NOT NULL DEFAULT true | |
 | prompts | jsonb | 3–4 conversation prompts |
 | neutral_description | text | |
 
-Unique `(code, version)`.
+UNIQUE `(code, version)`.
 
-## Private answers
+---
 
-### `private.responses`
-Accessible only via service role from Netlify Functions.
+## responses
+
+Sensitive. Server-only.
 
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | uuid PK | |
-| check_id | uuid | |
-| participant_id | uuid | |
-| question_id | uuid | |
-| ciphertext | bytea | AES-256-GCM payload |
-| iv | bytea | |
-| auth_tag | bytea | |
-| importance | smallint | 1–5 (also outside ciphertext for scoring ops—or keep inside; prefer outside for indexing? **Keep outside** for scoring without decrypt of all fields separately; answer value stays encrypted) |
-| hard_line | boolean | |
+| check_id | uuid NOT NULL | |
+| participant_id | uuid NOT NULL → check_participants | |
+| question_id | uuid NOT NULL → questions | |
+| ciphertext | bytea NOT NULL | AES-256-GCM of `{ answer, followUp? }` |
+| iv | bytea NOT NULL | |
+| auth_tag | bytea NOT NULL | |
+| importance | smallint NOT NULL | 1–5 |
+| hard_line | boolean NOT NULL DEFAULT false | |
 | created_at | timestamptz | |
 | updated_at | timestamptz | |
 
-Unique `(participant_id, question_id)`.
+UNIQUE `(participant_id, question_id)`.
 
-**Encrypted JSON payload:** `{ answer: ..., followUp?: ... }` only. Importance/hard_line stored as columns for scoring efficiency; still never returned to partner clients.
+Importance/hard_line stored as columns for scoring; answer value stays encrypted.
 
-## Results
+---
 
-### `results`
+## results
+
 | Column | Type | Notes |
 | --- | --- | --- |
-| check_id | uuid PK | |
-| algorithm_version | text | e.g. `1.0.0` |
-| question_set_version | text | |
-| alignment_index | numeric | |
-| aligned_count | int | |
-| minor_count | int | |
-| conversation_count | int | |
-| major_count | int | |
-| hard_line_collision_count | int | |
+| check_id | uuid PK → checks | |
+| algorithm_version | text NOT NULL | e.g. `1.0.0` |
+| question_set_version | text NOT NULL | |
+| alignment_index | numeric NOT NULL | |
+| aligned_count | int NOT NULL | |
+| minor_count | int NOT NULL | |
+| conversation_count | int NOT NULL | |
+| major_count | int NOT NULL | |
+| hard_line_collision_count | int NOT NULL | |
 | category_scores | jsonb | |
 | generated_at | timestamptz | |
 
-### `result_items`
+---
+
+## result_items
+
 | Column | Type | Notes |
 | --- | --- | --- |
-| check_id | uuid | |
-| question_id | uuid | |
-| distance | numeric | |
-| impact | numeric | |
-| classification | text | aligned \| slight \| conversation \| major \| major_conversation |
-| hard_line_collision | boolean | |
-| category | text | |
+| check_id | uuid NOT NULL | |
+| question_id | uuid NOT NULL | |
+| distance | numeric NOT NULL | |
+| impact | numeric NOT NULL | |
+| classification | text NOT NULL | aligned \| slight \| conversation \| major \| major_conversation |
+| hard_line_collision | boolean NOT NULL | |
+| category | text NOT NULL | |
 | discussed_at | timestamptz | |
-| sort_rank | int | |
+| sort_rank | int NOT NULL | |
 
 No answer columns.
 
-### `reveals`
+---
+
+## reveals
+
 | Column | Type | Notes |
 | --- | --- | --- |
-| check_id | uuid | |
-| question_id | uuid | |
-| status | text | none \| requested_by_a \| requested_by_b \| mutual |
-| participant_a_consent | boolean | |
-| participant_b_consent | boolean | |
+| check_id | uuid NOT NULL | |
+| question_id | uuid NOT NULL | |
+| status | text NOT NULL | none \| requested_by_a \| requested_by_b \| mutual |
+| participant_a_consent | boolean NOT NULL DEFAULT false | |
+| participant_b_consent | boolean NOT NULL DEFAULT false | |
 | revealed_at | timestamptz | irreversible |
 
-## Payments
+UNIQUE `(check_id, question_id)`.
 
-### `payments`
+---
+
+## payments
+
 | Column | Type | Notes |
 | --- | --- | --- |
 | id | uuid PK | |
-| check_id | uuid | |
-| purchasing_user_id | uuid | |
+| check_id | uuid NOT NULL | |
+| purchasing_clerk_user_id | text NOT NULL | |
 | stripe_checkout_session | text | |
 | stripe_payment_intent | text | |
-| amount | int | cents · 2900 |
-| currency | text | usd |
-| status | text | |
+| amount | int NOT NULL | cents · 2900 |
+| currency | text NOT NULL DEFAULT `usd` | |
+| status | text NOT NULL | |
 | product_version | text | |
 | created_at | timestamptz | |
 
+---
+
 ## Operational
 
-### `reminder_log`
-`(check_id, sender_user_id, sent_at)` for 24h throttle.
+### reminder_log
+`(check_id, sender_profile_id, sent_at)` — enforce 24h throttle.
 
-### `deletion_queue`
-Encrypted blobs scheduled for purge after check/account delete.
+### deletion_queue
+Encrypted blobs / row references scheduled for purge after check/account delete.
 
-## RLS principles
+---
 
-- Participants may `select` their own check membership and non-sensitive check metadata.
-- Only own participant row is writable by the user (via Functions preferred).
-- `results` / `result_items` readable by participants only when `checks.status = unlocked` (or `ready` for locked teaser fields only—conversation **count** may show on ready; item details locked).
-- `private.responses`: no grants to `authenticated` / `anon`.
-- Invitations: no client read of `token_hash`.
+## Migration starter sketch
 
-Prefer **all writes through Netlify Functions** using service role after JWT verification, keeping RLS as defense in depth for any accidental client access.
+```sql
+-- netlify/database/migrations/001_init/migration.sql
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+CREATE TABLE profiles (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  clerk_user_id text UNIQUE NOT NULL,
+  email text NOT NULL,
+  first_name text NOT NULL,
+  preferred_name text,
+  pronouns text,
+  age_confirmed_18 boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  deleted_at timestamptz
+);
+
+-- additional tables follow in same or subsequent migrations
+```
+
+Apply order is lexicographic by folder name. Production applies before publish; failure blocks deploy.

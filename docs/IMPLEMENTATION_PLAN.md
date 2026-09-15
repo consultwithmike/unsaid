@@ -1,11 +1,17 @@
 # Unsaid — Implementation Plan
 
-**Status:** Locked product definition · ready for build  
-**Stack:** React + TypeScript + Vite · Netlify · Supabase Auth/Postgres · Stripe · Resend  
+**Status:** Locked for Netlify deployment  
+**Stack:** Next.js App Router · Netlify · Netlify Database (Postgres) · Clerk · Stripe · Resend  
 **Price:** $29 per couple, one-time · no subscription  
 **Tagline:** Before you wed. Check Unsaid.
 
-This plan turns the product lock into an executable build order. Decisions below are treated as final unless explicitly revised.
+This plan is constrained by one rule: **everything we build must deploy on Netlify.**
+
+Verified against Netlify docs:
+
+- Next.js App Router, Route Handlers, Server Actions, Middleware — full support via OpenNext (zero-config; do not pin `@netlify/plugin-nextjs` unless required)
+- Netlify Database — Postgres provisioned by `@netlify/database`; migrations in `netlify/database/migrations/`; preview deploys get isolated DB branches
+- Secrets via Netlify env vars; use `Netlify.env.get` in Netlify Functions; Next.js server code uses standard env with vars set in Netlify UI/CLI
 
 ---
 
@@ -19,26 +25,28 @@ Unsaid is a private, double-blind premarital compatibility check. Two people ans
 > You have N conversations worth having.  
 > Unlock for both · $29
 
-Everything else exists to make that moment trustworthy, private, and worth paying for.
-
 ---
 
 ## 2. Locked technical decisions
 
 | Layer | Choice | Why |
 | --- | --- | --- |
-| App shell | Vite + React + TypeScript | Spec · Netlify-friendly SPA/PWA |
-| Routing | React Router | Multi-step flows + deep links (`/invite/:token`) |
-| Data fetching | TanStack Query | Optimistic saves, retries, cache for check state |
-| Forms | React Hook Form + Zod | Assessment + onboarding validation |
-| Hosting | Netlify CDN + Functions | Static shell + sensitive server ops |
-| Auth | Supabase Auth (magic link / OTP) | Passwordless MVP · JWT sessions |
-| DB | Supabase Postgres + RLS | Relational model · participant isolation |
-| Answers | `private.responses` + AES-256-GCM | Never via public Data API · never partner-readable |
-| Payments | Stripe Checkout + webhook | Trust webhook, not client redirect |
+| Framework | **Next.js App Router** (15+) | First-class on Netlify OpenNext · SSR/SEO for landing + editorial pages · Route Handlers for APIs |
+| Hosting | **Netlify** | Production target · auto Next adapter · DB branching |
+| Auth | **Clerk** (`@clerk/nextjs`) | Passwordless email OTP · session in Middleware / `auth()` · no passwords |
+| Database | **Netlify Database** (`@netlify/database`) | Hosted Postgres · auto provision · SQL migrations · preview branches |
+| Answers | AES-256-GCM in DB · **server-only** reads | Never returned to partner clients |
+| Payments | **Stripe Checkout** + webhook | Trust webhook, not client redirect |
 | Email | Resend | Invite, reminder, ready, reveal |
 | Monitoring | Sentry (PII scrubbed) | Errors without relationship content |
 | Analytics | Privacy-safe event names only | No answers, topics, or mismatches |
+
+**Rejected for this MVP (deploy friction / wrong fit):**
+
+- Vite SPA + hand-rolled Netlify Functions as the app shell (weaker SEO, more glue)
+- Supabase Auth (replaced by Clerk)
+- Supabase Postgres (replaced by Netlify Database)
+- Client-side scoring or partner-answer fetches
 
 **Hard rules:**
 
@@ -49,200 +57,216 @@ Everything else exists to make that moment trustworthy, private, and worth payin
 
 ---
 
-## 3. Repository layout
+## 3. Architecture
+
+```mermaid
+flowchart TB
+  subgraph client [Browser]
+    UI[Next.js Client Components]
+    ClerkJS[Clerk session]
+  end
+
+  subgraph netlify [Netlify]
+    Edge[Clerk middleware / Edge]
+    RSC[Server Components]
+    API[Route Handlers + Server Actions]
+    Sched[Scheduled Function retention]
+    DB[(Netlify Database Postgres)]
+  end
+
+  Stripe[Stripe Checkout]
+  Resend[Resend]
+  ClerkAPI[Clerk]
+
+  UI --> ClerkJS
+  ClerkJS --> Edge
+  UI --> API
+  RSC --> DB
+  API --> DB
+  API --> Stripe
+  API --> Resend
+  Edge --> ClerkAPI
+  Sched --> DB
+  Stripe -->|webhook| API
+```
+
+**Auth pattern:** Clerk Middleware protects app routes. Every Route Handler / Server Action calls `await auth()` from `@clerk/nextjs/server`, then queries Postgres with `getDatabase()` from `@netlify/database`. The browser never holds a DB connection string and never receives partner answers.
+
+**API pattern:** Prefer **Next.js Route Handlers** under `app/api/**` (deployed as Netlify Functions by the OpenNext adapter). Use a **Netlify scheduled function** only for retention cleanup (Next has no native cron).
+
+---
+
+## 4. Repository layout
 
 ```
 /
-├── netlify.toml
+├── netlify.toml                 # build hints; keep minimal (Next auto-detected)
 ├── package.json
-├── index.html
-├── public/                 # PWA manifest, icons
-├── src/
-│   ├── main.tsx
-│   ├── App.tsx
-│   ├── styles/             # tokens, global, motion
-│   ├── components/         # Button, Field, Progress, etc.
-│   ├── features/
-│   │   ├── landing/
-│   │   ├── auth/
-│   │   ├── checks/         # create, invite, waiting, ready
-│   │   ├── assessment/     # section intro, question screen
-│   │   ├── results/        # summary, detail, reveal
-│   │   ├── dashboard/
-│   │   ├── settings/
-│   │   └── seo/            # editorial pages
-│   ├── lib/
-│   │   ├── supabaseClient.ts   # anon client only
-│   │   ├── api.ts              # typed fetch wrappers
-│   │   ├── analytics.ts
-│   │   └── offlineQueue.ts     # pending answer sync
-│   ├── content/
-│   │   ├── questions/      # question bank JSON by version
-│   │   ├── conversationPrompts.ts
-│   │   └── copy.ts         # brand/legal tone strings
-│   └── routes.tsx
-├── netlify/functions/      # API surface
-│   ├── checks-create.ts
-│   ├── checks-invite.ts
-│   ├── invitations-accept.ts
-│   ├── checks-get.ts
-│   ├── responses-upsert.ts
-│   ├── assessment-complete.ts
-│   ├── checks-calculate.ts
-│   ├── checks-checkout.ts
-│   ├── stripe-webhook.ts
-│   ├── results-get.ts
-│   ├── results-reveal.ts
-│   ├── checks-delete.ts
-│   ├── account-delete.ts
-│   └── reminders-send.ts
-├── shared/                 # isomorphic types + scoring pure functions
+├── next.config.ts
+├── middleware.ts                # clerkMiddleware (Next 15); proxy.ts if Next 16+
+├── app/
+│   ├── layout.tsx               # ClerkProvider, fonts, tokens
+│   ├── page.tsx                 # Landing
+│   ├── (auth)/
+│   │   └── sign-in/[[...sign-in]]/page.tsx
+│   ├── (app)/                   # authenticated shell
+│   │   ├── dashboard/page.tsx
+│   │   ├── checks/new/page.tsx
+│   │   ├── checks/[id]/...
+│   │   ├── assessment/[checkId]/page.tsx
+│   │   ├── results/[checkId]/page.tsx
+│   │   └── settings/page.tsx
+│   ├── invite/[token]/page.tsx
+│   ├── questions-before-marriage/page.tsx   # SEO
+│   └── api/
+│       ├── checks/route.ts
+│       ├── checks/[id]/route.ts
+│       ├── checks/[id]/invite/route.ts
+│       ├── checks/[id]/checkout/route.ts
+│       ├── checks/[id]/calculate/route.ts
+│       ├── checks/[id]/remind/route.ts
+│       ├── invitations/[token]/accept/route.ts
+│       ├── responses/route.ts
+│       ├── assessment/complete/route.ts
+│       ├── results/[checkId]/route.ts
+│       ├── results/[checkId]/[questionId]/reveal/route.ts
+│       ├── stripe/webhook/route.ts
+│       ├── account/route.ts
+│       └── admin/...
+├── components/                  # Button, Field, Progress, brand UI
+├── features/                    # landing, assessment, results, etc.
+├── lib/
+│   ├── db.ts                    # getDatabase() wrapper
+│   ├── auth.ts                  # requireUser() helpers
+│   ├── crypto.ts                # AES-256-GCM + DEK wrap
+│   ├── stripe.ts
+│   ├── email.ts                 # Resend
+│   ├── analytics.ts
+│   └── offlineQueue.ts
+├── content/
+│   ├── questions/2026.09.json
+│   ├── conversationPrompts.ts
+│   └── copy.ts
+├── shared/
 │   ├── types.ts
-│   ├── scoring.ts          # unit-tested
+│   ├── scoring.ts
 │   ├── distances.ts
 │   └── questionSet.ts
-├── supabase/
-│   ├── migrations/
-│   └── seed/
+├── netlify/
+│   ├── database/migrations/     # REQUIRED for schema
+│   │   └── 001_init/.../migration.sql
+│   └── functions/
+│       └── retention-cleanup.mts   # scheduled only
 └── docs/
-    ├── IMPLEMENTATION_PLAN.md
-    ├── DATA_MODEL.md
-    ├── SCORING.md
-    └── PRIVACY.md
 ```
 
-Shared scoring lives in `shared/` so Netlify Functions and unit tests use the same pure algorithm. The browser never receives raw partner answers to score against.
+---
+
+## 5. Design system (unchanged product lock)
+
+Tokens, Newsreader + Inter, wine/ivory palette, mobile-first 640px / results 960px, buttons 52px / radius 14px — as specified in the product lock. Implement in CSS variables + Next font loading (`next/font` for Inter; Newsreader via `next/font/google` or equivalent).
+
+Landing: one composition, brand-led hero, `$29 per couple · No subscription` visible.
 
 ---
 
-## 4. Design system (ship first)
+## 6. Clerk auth (MVP)
 
-Implement tokens before feature UI so every screen shares one language.
+**Mode:** Email verification code (OTP). No passwords. Apple/Google later.
 
-### Tokens (`src/styles/tokens.css`)
+**Clerk Dashboard config:**
 
-| Role | Token | Hex |
-| --- | --- | --- |
-| bg | `--color-ivory` | `#FAF7F2` |
-| text | `--color-ink` | `#181416` |
-| brand | `--color-wine` | `#54263A` |
-| brand-hover | `--color-wine-dark` | `#3F1C2C` |
-| accent | `--color-rose` | `#B8667A` |
-| bg-2 | `--color-stone` | `#EEE9E4` |
-| aligned | `--color-sage` | `#6E806F` |
-| conversation | `--color-ochre` | `#B47A32` |
-| major | `--color-brick` | `#A34D46` |
-| border | `--color-warm-gray` | `#DDD6D0` |
-| white | `--color-white` | `#FFFFFF` |
+- Require email
+- Sign-in / sign-up via email verification code
+- Collect first name (Clerk + our `profiles` table)
+- Optional preferred name / pronouns in our DB only
+- 18+ confirmation stored in `profiles.age_confirmed_18`
 
-### Typography
+**App wiring:**
 
-- Display: **Newsreader** 500/600/700 (hero, headings, Alignment Index, result statements)
-- UI: **Inter** 400/500/600/700
-- Mobile type scale as specified (hero 48/50 → small 14/20)
-- Min UI text: 14px · touch targets ≥ 44px · buttons 52px / radius 14px
+- `ClerkProvider` in `app/layout.tsx`
+- `clerkMiddleware()` in `middleware.ts`
+- Custom branded sign-in UI (not a generic auth portal look) using Clerk custom flow or themed `<SignIn />`
+- Server: `const { userId } = await auth()` — reject if missing
+- On first authenticated visit: upsert `profiles` row keyed by `clerk_user_id`
 
-### Layout
-
-- Mobile-first · content max **640px** · results desktop max **960px**
-- Side padding: 20 → 24 → 32
-- One composition landing hero (brand-led, not dashboard)
-- Atmosphere via warm ivory + subtle texture/gradient—not flat white SaaS
-
-### Motion (2–3 intentional)
-
-1. Hero brand / headline fade-rise on load  
-2. Question answer selection press feedback  
-3. Results unlock reveal (Alignment Index + conversation count)
-
-Respect `prefers-reduced-motion`.
+**Do not require:** legal name, birthday beyond 18+, address, gender, phone.
 
 ---
 
-## 5. Data model (MVP tables)
+## 7. Netlify Database
 
-See also `docs/DATA_MODEL.md` (to be filled in Phase 0).
+```bash
+npm install @netlify/database
+```
 
-**Public schema (RLS):** `users`/`profiles` via Supabase Auth, `checks`, `check_participants`, `invitations` (token **hash** only), `questions`, `results`, `result_items`, `reveals`, `payments`, `discussed_flags` (optional).
+No manual connection-string setup. Provisioning happens on `netlify dev` / deploy.
 
-**Private schema (service role only):** `private.responses` with encrypted answer payload.
+```ts
+// lib/db.ts
+import { getDatabase } from "@netlify/database";
 
-**Encryption:**
+export function db() {
+  return getDatabase();
+}
+```
 
-- Per-check DEK (AES-256-GCM)
-- DEK wrapped by app master key from Netlify env (`ANSWER_MASTER_KEY`)
-- Encrypt/decrypt only in Functions
+Migrations live in `netlify/database/migrations/<number>_<slug>/migration.sql` and apply automatically before publish. Preview deploys get isolated DB branches.
 
-**Check statuses:** `created` → `active` → `awaiting_partner` → `ready` → `unlocked` · plus `expired` / `deleted`.
-
----
-
-## 6. Scoring (pure module)
-
-Implement and unit-test in Phase 3 before wiring UI.
-
-For each question:
-
-- `d(q)` = distance 0–1 by type (`AG5`, `YN3`, `ORD`, `CAT`, `MULTI`)
-- `w(q) = sqrt(iA × iB)`
-- `Q(q) = 100 × (1 - d)`
-- Alignment Index = `100 × [1 - Σ(d·w)/Σw]` (also per category)
-
-**Hard-line collision:** `d ≥ 0.75` AND either hard line → counts separately; visual class becomes **Major conversation**; `impact × 2`.
-
-**Impact sort:** `impact = d × sqrt(iA × iB)` (×2 if collision).
-
-**Language:** never “96% compatible” · say **Alignment Index: 82**.
-
-Bands: 85–100 Mostly aligned · 70–84 Some important differences · 55–69 Several · &lt;55 Major differences worth understanding.
-
-Headline result: **You have N conversations worth having** (primary). Score is secondary.
-
-Special cases called out in bank:
-
-- CP02 “I genuinely don’t care” → low distance unless high importance
-- MO02 CAT options use ordered distance despite CAT label
-- HL02 needs custom compatibility matrix
-- Follow-ups: CP07 MULTI when AG5 ≥ 4; MO04 large-purchase ORD when relevant
+**Access rule:** All reads/writes of responses, scoring, reveals, payments go through server code only. No browser SQL. No public Data API.
 
 ---
 
-## 7. API surface (Netlify Functions)
+## 8. Data model (summary)
 
-All sensitive ops server-side. Auth via Supabase JWT on each request.
+See [DATA_MODEL.md](./DATA_MODEL.md).
+
+Core tables: `profiles`, `checks`, `check_participants`, `invitations`, `questions`, `responses` (encrypted), `results`, `result_items`, `reveals`, `payments`, `reminder_log`, `deletion_queue`.
+
+`profiles.clerk_user_id` is the auth foreign key (text, Clerk user id).
+
+---
+
+## 9. Scoring
+
+Unchanged algorithm — see [SCORING.md](./SCORING.md). Pure functions in `shared/scoring.ts`, unit-tested. Runs only in server Route Handlers after both participants complete.
+
+---
+
+## 10. API surface (Route Handlers)
 
 | Method | Path | Purpose |
 | --- | --- | --- |
 | POST | `/api/checks` | Create check + participant A |
-| POST | `/api/checks/:id/invite` | Create invitation (hash token) |
+| POST | `/api/checks/:id/invite` | Create invitation (store token hash) |
 | POST | `/api/invitations/:token/accept` | Partner B join |
 | GET | `/api/checks/:id` | Safe check state for participant |
 | POST | `/api/responses` | Upsert encrypted own answer |
-| POST | `/api/assessment/complete` | Mark complete; maybe trigger calc |
-| POST | `/api/checks/:id/calculate` | Internal/idempotent compare |
+| POST | `/api/assessment/complete` | Mark complete; trigger calc if both done |
+| POST | `/api/checks/:id/calculate` | Idempotent compare |
 | POST | `/api/checks/:id/checkout` | Stripe Checkout session |
 | POST | `/api/stripe/webhook` | Set paid / unlocked |
-| GET | `/api/checks/:id/results` | Diffs only (no partner answers) |
-| POST | `/api/results/:question/reveal` | Mutual reveal state machine |
+| GET | `/api/results/:checkId` | Diffs only when unlocked (teaser counts when ready) |
+| POST | `/api/results/:checkId/:questionId/reveal` | Mutual reveal state machine |
 | POST | `/api/checks/:id/remind` | Rate-limited reminder |
 | DELETE | `/api/checks/:id` | Soft-delete check |
 | DELETE | `/api/account` | Full account wipe |
 
-**Never exist:** any endpoint that returns partner answers without mutual reveal.
+**Never exist:** endpoints that return partner answers without mutual reveal.
 
-Redirects in `netlify.toml`: `/api/*` → `/.netlify/functions/:splat` (or per-function routes).
+Stripe webhook verifies signature; sets `checks.unlocked_at` + `payment_status = paid`. Do not trust client redirect alone.
 
-Env via `Netlify.env.get(...)` in Functions—never hardcoded secrets.
+Checkout metadata: `check_id`, `purchasing_user_id` (Clerk id), `product_version`.
 
 ---
 
-## 8. Primary user journeys (build order)
+## 11. Primary user journeys
 
 ```
 Person A                         Person B
-Landing                          Invite link
-  → Auth (magic link)              → Privacy explainer
-  → Create check                   → Auth
+Landing                          /invite/[token]
+  → Clerk email OTP                → Privacy explainer
+  → Create check                   → Clerk email OTP
   → Partner name + stage           → Accept invite
   → Share invite                   → Assessment (96)
   → Assessment (96)                → Waiting / Ready
@@ -251,239 +275,176 @@ Landing                          Invite link
   → Results (both)
 ```
 
-**Critical path to monetization:** Start → Invite → Both complete → Pay.
-
-Optimize Partner B’s first session hardest (largest drop-off).
+Critical funnel: **Start → Invite → Both complete → Pay**.
 
 ---
 
-## 9. Phased delivery
+## 12. Phased delivery
 
-### Phase 0 — Foundation (unblock everything)
+### Phase 0 — Deployable foundation
 
-- Scaffold Vite React TS app + Netlify config + `.gitignore` (include `.netlify`)
-- Install deps: React Router, TanStack Query, Zod, RHF, Supabase JS, Stripe
-- Design tokens, fonts, Button/Input primitives, layout shells
-- Supabase project wiring docs + first migrations (empty tables)
-- Shared TypeScript types
-- CI: typecheck + unit test script
-- Env template: `SUPABASE_*`, `STRIPE_*`, `ANSWER_MASTER_KEY`, `RESEND_*`, `SENTRY_*`
+- Scaffold Next.js App Router + TypeScript on Netlify (`next build`, publish `.next`, Node 18+)
+- `netlify.toml` minimal; `.netlify` in `.gitignore`
+- Install: `@clerk/nextjs`, `@netlify/database`, `stripe`, `zod`, `@tanstack/react-query`, `react-hook-form`
+- Design tokens + fonts + Button primitives
+- First migration: `profiles`, empty shell tables
+- `lib/db.ts`, `lib/auth.ts`
+- Prove: `netlify dev` serves app; Clerk sign-in works; DB query succeeds
+- Env template documented (Clerk, Stripe, `ANSWER_MASTER_KEY`, Resend, Sentry, `NEXT_PUBLIC_SITE_URL`)
 
-**Exit:** `netlify dev` serves empty shell with design tokens visible.
+**Exit:** Linked Netlify site can deploy main and hit a health Route Handler that runs `SELECT 1`.
 
-### Phase 1 — Landing + brand moment
+### Phase 1 — Landing + brand
 
-- Hero: brand **Unsaid** dominant · tagline · supporting copy · Start / See how it works · `$29 · No subscription`
-- Problem / How it works / Privacy / Final CTA sections (spec §41)
-- Legal footer: 18+, not therapy/advice disclaimer
+- Hero + problem + how it works + privacy + final CTA (§41)
+- Legal: 18+, not therapy disclaimer
 - Analytics: `landing_viewed`, `start_clicked`
-- Mobile LCP target &lt; ~2s (fonts, minimal JS on landing)
+- LCP target ~2s mobile
 
-**Exit:** Landing matches brand principles; CTA routes to auth stub.
+### Phase 2 — Auth + profile
 
-### Phase 2 — Auth + account shell
-
-- Magic link / OTP via Supabase Auth
-- Collect email + first name; optional preferred name / pronouns
-- 18+ confirmation
-- Session-aware app shell + logout
+- Clerk OTP branded screens
+- Profile upsert + first name + 18+
 - Dashboard empty state
-- Account deletion flow (confirmation `DELETE`) — can stub backend until Phase 8
+- Account deletion UI (wire fully in Phase 8)
 
-**Exit:** User can sign in and land on dashboard.
+### Phase 3 — Question bank + scoring
 
-### Phase 3 — Question bank + scoring engine
+- Author `2026.09` bank (96 Q + prompts + matrices)
+- `shared/scoring.ts` + distance unit tests
+- Seed `questions` via migration or deploy seed script
 
-- Author `question_set_version: 2026.09` with all 96 questions + prompts + matrices
-- Implement `shared/distances.ts` + `shared/scoring.ts` with fixtures
-- Unit tests for AG5/YN3/ORD/CAT/MULTI, weights, hard-line collisions, CP02 special case, impact sort
-- Seed `questions` table from bank
+### Phase 4 — Checks + invitations
 
-**Exit:** Scoring pure functions fully tested; no UI dependency.
+- Create check, invite token (128-bit, hashed, 30-day)
+- Web Share + copy link
+- Accept invite for B; lock partner once B starts
+- Resend invitation email
+- Rate limits
 
-### Phase 4 — Check creation + invitation
+### Phase 5 — Assessment
 
-- Create check UI (relationship stage, optional wedding date, partner first name)
-- Generate `check_id` + 128-bit invite token (store hash only, 30-day expiry)
-- Invite screen: Share (Web Share API) + Copy link
-- Accept invitation flow for B (privacy copy, single-partner lock once B starts)
-- Email: partner invitation (Resend)
-- Rate limits on create/invite
+- Section intros, one question/screen, importance, hard lines
+- Optimistic save + offline queue
+- Waiting + reminder (1/24h)
+- No score before both complete
 
-**Exit:** A can invite B; B can join; second partner cannot be swapped after B starts.
+### Phase 6 — Calculate + Stripe
 
-### Phase 5 — Assessment experience
-
-- Section intro (title, one sentence, 8 q · ~90s)
-- One question per screen: prompt, answer control, importance 1–5, hard-line toggle if importance ≥ 4
-- Progress: `Money · 4 of 8`
-- Optimistic save + offline queue (“Saving…” / sync on reconnect)
-- Never mark section complete until server confirms
-- Resume mid-assessment
-- Waiting screen with partner progress % + reminder (1 / 24h)
-- Section complete: “Money done. Answers saved privately.” — **no score**
-
-**Exit:** Full 96-question path save/resume works for both roles.
-
-### Phase 6 — Calculate + paywall
-
-- On both complete: server decrypts, scores, writes `results` + `result_items`, status `ready`
-- Ready screen: conversation count + locked CTA · `$29` · Stripe Checkout
-- Webhook sets `payment_status=paid`, `unlocked_at`, status `unlocked`
+- Server decrypt + score + write results → `ready`
+- Ready paywall UI · Stripe Checkout · webhook unlock
 - Emails: partner finished · results ready
-- Do not unlock on client return alone
 
-**Exit:** Paid unlock works end-to-end in Stripe test mode.
+### Phase 7 — Results + reveal
 
-### Phase 7 — Results + mutual reveal
+- Headline conversations count · Alignment Index · impact list
+- Detail + prompts · mutual reveal · mark discussed · retake · share
 
-- Summary: “You have N conversations…” · Alignment Index · count cards · impact-sorted list
-- Detail: classification, hard-line-aware copy, conversation prompts, no partner answers
-- Request mutual reveal / consent / irreversible warning
-- Mark discussed
-- Retake CTA → new check ($29), never overwrite
-- Viral share block: “Know someone getting serious?”
-- Tone audit: no judgment language
+### Phase 8 — Trust / abuse / a11y
 
-**Exit:** Full results UX matches §28–31; privacy invariants hold.
+- Deletion + 90-day retention scheduled function
+- Rate limits, Sentry scrubbing, analytics allowlist
+- WCAG AA pass
 
-### Phase 8 — Trust, retention, abuse
+### Phase 9 — SEO + PWA + admin
 
-- Account + check deletion with encrypted answer purge queue
-- 90-day inactivity cleanup job (scheduled Function)
-- Rate limits: auth, reminders, checkout, reveals
-- Sentry scrubbing
-- Analytics allowlist only (§40)
-- Accessibility pass: WCAG AA, focus, SR labels, reduced motion, text not color-only
-
-**Exit:** Deletion + retention + rate limits documented and tested.
-
-### Phase 9 — SEO + PWA
-
-- Editorial pages (§42) linking to Start
-- Installable PWA (manifest, icons, basic SW for shell—not full offline assessment)
-- Basic `/admin` (counts, funnel, question versions, payment status)—**no casual plaintext answer browse**
-
-**Exit:** Marketing pages live; admin read-only metrics usable.
+- Editorial pages (§42)
+- Installable PWA shell
+- `/admin` metrics (no casual plaintext answer browse)
 
 ---
 
-## 10. Explicit non-goals (MVP)
+## 13. Explicit non-goals (MVP)
 
-Do not build: AI advice, chat, therapist marketplace, wedding planning, subscriptions, social profiles, community, dating matching, public scores, native apps, referral discounts, counselor product, compare-over-time.
-
----
-
-## 11. Testing strategy
-
-| Layer | What |
-| --- | --- |
-| Unit | Scoring, distances, CAT matrices, encryption wrap/unwrap |
-| Function | Authz (cannot read partner), invite hash, webhook idempotency, reveal state machine |
-| E2E (later) | Happy path A+B → pay → results; invite expiry; reminder throttle |
-| Manual | Mobile 375–430 widths; Web Share; Stripe test cards |
-
-Privacy regression suite (must stay green):
-
-1. Authenticated user cannot fetch partner encrypted or plaintext answers.
-2. Results payload contains no `answer` fields unless `reveals` status is `mutual`.
-3. Analytics payloads reject forbidden properties.
+AI advice, chat, therapist marketplace, wedding planning, subscriptions, social profiles, community, dating matching, public scores, native apps, referral discounts, counselor product.
 
 ---
 
-## 12. Security checklist (before production)
-
-- [ ] RLS on every public table; private schema not exposed
-- [ ] Service role key only in Functions
-- [ ] Master encryption key only in Netlify env
-- [ ] Invitation tokens hashed (SHA-256+) · raw shown once
-- [ ] Stripe webhook signature verification
-- [ ] CORS locked to site origin
-- [ ] Rate limiting on abuse-prone endpoints
-- [ ] No answer content in logs, Sentry, email subjects, or analytics
-- [ ] Minimum age 18 enforced at signup
-
----
-
-## 13. Env & Netlify
+## 14. Env vars (Netlify)
 
 ```
-SUPABASE_URL
-SUPABASE_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY
-ANSWER_MASTER_KEY
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+CLERK_SECRET_KEY
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-in
 STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET
-STRIPE_PRICE_ID          # $29 one-time
+STRIPE_PRICE_ID              # $29 one-time
+ANSWER_MASTER_KEY
 RESEND_API_KEY
 EMAIL_FROM
 SENTRY_DSN
-SITE_URL
+NEXT_PUBLIC_SITE_URL
+ADMIN_EMAILS
 ```
 
-Client may only receive anon Supabase URL/key and public Stripe publishable key if needed (Checkout is hosted, so publishable may be unused).
-
-Add `.netlify` to `.gitignore`. Use `Netlify.env.get` in Functions.
+Netlify Database connection is injected by the platform — do not hardcode. Stripe webhook endpoint on production URL must be registered in Stripe Dashboard.
 
 ---
 
-## 14. Metrics to instrument from day one
+## 15. Deploy checklist (Definition of “not crap”)
+
+Before calling Phase 0 done:
+
+1. `next build` succeeds locally
+2. Site linked on Netlify; production deploy green
+3. Clerk production instance keys set; OTP email works on deploy URL
+4. `@netlify/database` migration applied on production deploy
+5. Health route returns DB connectivity
+6. Stripe test mode Checkout + webhook deliver on deploy preview or staging
+
+Local: `netlify dev` (or `next dev` with Netlify platform emulation as documented for the stack). Prefer `netlify dev` when testing DB + functions together.
+
+---
+
+## 16. Testing strategy
+
+| Layer | What |
+| --- | --- |
+| Unit | Scoring, distances, encryption wrap/unwrap |
+| Route Handler | Authz (cannot read partner), invite hash, webhook idempotency, reveal machine |
+| Deploy smoke | Health + Clerk session + DB select on Netlify |
+| Manual | 375–430px assessment; Web Share; Stripe test cards |
+
+Privacy regressions must stay green (see [PRIVACY.md](./PRIVACY.md)).
+
+---
+
+## 17. Metrics
 
 **North star:** Paid completed checks  
-
-**Funnel:** Start → Invite → Both complete → Pay → Results viewed  
-
-Secondary: reveal request rate, conversation open, retake, referral share taps.
+**Funnel:** Start → Invite → Both complete → Pay → Results viewed
 
 ---
 
-## 15. Suggested first implementation sprint
+## 18. First implementation sprint
 
-Build in this order so the product moment is reachable ASAP:
-
-1. Phase 0 scaffold + tokens  
-2. Phase 3 scoring + question bank (parallelizable with UI)  
-3. Phase 2 auth  
-4. Phase 4 checks + invites  
-5. Phase 5 assessment  
-6. Phase 6 calculate + Stripe  
-7. Phase 7 results  
-8. Phase 1 polish landing against real Start CTA  
-9. Phases 8–9 hardening / SEO / admin  
-
-Landing can ship early for marketing, but **do not delay encryption + scoring correctness** for visual polish.
+1. Phase 0 — Next.js + Clerk + Netlify Database **deployed**
+2. Phase 3 scoring (parallel)
+3. Phase 2 polish auth/profile
+4. Phase 4–7 product path to $29 unlock
+5. Phase 1 landing polish against real Start CTA
+6. Phases 8–9 hardening
 
 ---
 
-## 16. Open implementation details (defaults chosen)
-
-These were underspecified operationally; defaults for MVP:
+## 19. Defaults (locked)
 
 | Topic | Default |
 | --- | --- |
-| Magic link vs OTP | Email OTP (6-digit) primary; magic link fallback if easier with Supabase template |
-| Partner progress % | Count of saved answers / 96 (server-derived) |
-| Discussed flag | `result_items.discussed_at` nullable |
-| Follow-up questions | Same screen accordion after parent answer; stored as linked question codes |
-| Admin auth | Allowlist emails in env (`ADMIN_EMAILS`) |
-| Currency | USD only for MVP |
-| PWA SW | Precache shell only; assessment requires network |
+| Auth factor | Clerk email OTP (verification code) |
+| Next.js | App Router 15+ · `middleware.ts` with `clerkMiddleware` |
+| ORM | `@netlify/database` `db.sql` tagged templates (not Drizzle for MVP) |
+| Partner progress | `answer_count / 96` server-derived |
+| Currency | USD · 2900 cents |
+| PWA | Precache shell only |
+| Admin | `ADMIN_EMAILS` allowlist |
 
 ---
 
-## 17. Definition of done (MVP)
+## 20. Definition of done (MVP)
 
-A stranger on a phone can:
-
-1. Start a check and invite a partner  
-2. Both complete all 96 questions privately  
-3. See “Your Unsaid is ready” with conversation count  
-4. Pay $29 once via Stripe  
-5. Both unlock results with Alignment Index + impact-sorted conversations  
-6. Request/consent mutual reveal on one topic  
-7. Delete account/check  
-
-…with partner answers never exposed to the client except via mutual reveal, and with tone that never judges answers.
+A stranger on a phone can complete Start → Invite → Both assess → Pay $29 → View results → Mutual reveal → Delete account, on a **Netlify production URL**, with partner answers never exposed except via mutual reveal.
 
 ---
 
