@@ -22,7 +22,7 @@ export default async function handler() {
     UPDATE checks
        SET status = 'expired'
      WHERE status IN ('awaiting_partner', 'active')
-       AND last_activity_at < now() - (${INACTIVITY_DAYS} || ' days')::interval
+       AND last_activity_at < now() - make_interval(days => ${INACTIVITY_DAYS})
     RETURNING id
   `;
 

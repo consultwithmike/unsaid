@@ -91,21 +91,35 @@ export const BASE_REQUIRED_COUNT = getPrimaryQuestions().length;
 
 /**
  * Whether a follow-up question is triggered given the parent's saved answer.
- * Mirrors E2E_LOCKS §4 (`CP07` >= 4, `MO04` >= 3) generically via `followUpWhen`.
+ * Mirrors E2E_LOCKS §4 (`CP07` >= 4, `MO04` >= 3).
+ *
+ * The threshold may live on the *parent* question's `followUpWhen`
+ * (`{ answerMin, answerMax, followUpCode }`) and/or on the *child*
+ * follow-up's `hiddenUnlessParent` (`{ code, answerMin, answerMax }`).
+ * Both are honored — either being satisfied is sufficient — since the
+ * seed data currently only sets one or the other per pair.
  */
 export function isFollowUpTriggered(
   followUp: QuestionBankEntry,
   parentAnswer: number | string | string[] | undefined,
+  parent?: QuestionBankEntry,
 ): boolean {
-  if (!followUp.followUpWhen) return false;
   if (typeof parentAnswer !== "number") return false;
-  const { answerMin, answerMax } = followUp.followUpWhen as {
-    answerMin?: number;
-    answerMax?: number;
-  };
-  if (answerMin !== undefined && parentAnswer < answerMin) return false;
-  if (answerMax !== undefined && parentAnswer > answerMax) return false;
-  return true;
+
+  const thresholds: { answerMin?: number; answerMax?: number }[] = [];
+  if (parent?.followUpWhen?.followUpCode === followUp.code) {
+    thresholds.push(parent.followUpWhen);
+  }
+  if (followUp.hiddenUnlessParent && followUp.hiddenUnlessParent.code === parent?.code) {
+    thresholds.push(followUp.hiddenUnlessParent);
+  }
+  if (thresholds.length === 0) return false;
+
+  return thresholds.some(({ answerMin, answerMax }) => {
+    if (answerMin !== undefined && parentAnswer < answerMin) return false;
+    if (answerMax !== undefined && parentAnswer > answerMax) return false;
+    return true;
+  });
 }
 
 /**
@@ -119,7 +133,7 @@ export function buildQuestionWalk(
   for (const q of getPrimaryQuestions()) {
     walk.push(q);
     const followUp = getFollowUpFor(q.code);
-    if (followUp && isFollowUpTriggered(followUp, answersByCode[q.code])) {
+    if (followUp && isFollowUpTriggered(followUp, answersByCode[q.code], q)) {
       walk.push(followUp);
     }
   }
