@@ -1,26 +1,158 @@
 @import "tailwindcss";
 
+/* Unsaid design tokens — see docs/DESIGN_TOKENS.md. Locked for MVP build. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-ivory: #faf7f2;
+  --color-ink: #181416;
+  --color-wine: #54263a;
+  --color-wine-dark: #3f1c2c;
+  --color-rose: #b8667a;
+  --color-stone: #eee9e4;
+  --color-sage: #6e806f;
+  --color-ochre: #b47a32;
+  --color-brick: #a34d46;
+  --color-warm-gray: #ddd6d0;
+  --color-white: #ffffff;
+
+  --font-display: var(--font-newsreader), "Newsreader", Georgia, serif;
+  --font-body: var(--font-inter), "Inter", system-ui, sans-serif;
+
+  --radius-button: 14px;
+  --radius-card: 18px;
+  --content-max: 640px;
+  --results-max: 960px;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ivory: var(--color-ivory);
+  --color-ink: var(--color-ink);
+  --color-wine: var(--color-wine);
+  --color-wine-dark: var(--color-wine-dark);
+  --color-rose: var(--color-rose);
+  --color-stone: var(--color-stone);
+  --color-sage: var(--color-sage);
+  --color-ochre: var(--color-ochre);
+  --color-brick: var(--color-brick);
+  --color-warm-gray: var(--color-warm-gray);
+  --color-white: var(--color-white);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  background: var(--color-ivory);
+  color: var(--color-ink);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-wine);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fade-rise {
+    animation: fade-rise 0.6s ease-out both;
+  }
+
+  .press-scale:active {
+    transform: scale(0.97);
+  }
+
+  .unlock-pop {
+    animation: unlock-pop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+}
+
+.press-scale {
+  transition: transform 0.12s ease-out;
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes unlock-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.container-content {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+@media (min-width: 640px) {
+  .container-content {
+    padding-inline: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-content {
+    padding-inline: 32px;
+  }
+}
+
+.container-results {
+  max-width: var(--results-max);
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+
+@media (min-width: 640px) {
+  .container-results {
+    padding-inline: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-results {
+    padding-inline: 32px;
+  }
 }
