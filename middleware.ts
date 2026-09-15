@@ -27,8 +27,13 @@ const isPublicRoute = createRouteMatcher([
   "/sitemap.xml",
 ]);
 
+/**
+ * The token page and its read-only preview endpoint are public; everything
+ * deeper (`/invite/continue`, `/api/invitations/:token/accept`) is not.
+ */
 const isPublicInviteToken = (pathname: string) =>
-  /^\/invite\/[^/]+$/.test(pathname) && pathname !== "/invite/continue";
+  (/^\/invite\/[^/]+$/.test(pathname) && pathname !== "/invite/continue") ||
+  /^\/api\/invitations\/[^/]+$/.test(pathname);
 
 export default clerkMiddleware(async (auth, request) => {
   const { pathname } = request.nextUrl;

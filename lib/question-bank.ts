@@ -25,7 +25,12 @@ export interface QuestionBankEntry {
   neutralDescription?: string;
   prompts?: string[];
   parentCode: string | null;
-  followUpWhen: { code: string; answerMin?: number; answerMax?: number } | null;
+  followUpWhen: {
+    followUpCode: string;
+    answerMin?: number;
+    answerMax?: number;
+  } | null;
+  hiddenUnlessParent?: { code: string; answerMin?: number; answerMax?: number } | null;
   compatibilityMatrix: unknown;
   distanceMode?: string;
 }
@@ -63,6 +68,11 @@ export function getPrimaryQuestions(): QuestionBankEntry[] {
 }
 
 export function getFollowUpFor(code: string): QuestionBankEntry | undefined {
+  const parent = getQuestionByCode(code);
+  if (parent?.followUpWhen?.followUpCode) {
+    const byCode = getQuestionByCode(parent.followUpWhen.followUpCode);
+    if (byCode) return byCode;
+  }
   return typedBank.questions.find((q) => q.parentCode === code);
 }
 

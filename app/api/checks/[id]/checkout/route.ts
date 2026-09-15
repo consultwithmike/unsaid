@@ -35,6 +35,8 @@ export const POST = handler(async (_request: Request, { params }: Params) => {
   }
 
   return Response.json({
+    // `url` and `checkoutUrl` are the same value; both names are in use by callers.
+    url,
     checkoutUrl: url,
     reused,
     priceCents: PRICE_CENTS,
