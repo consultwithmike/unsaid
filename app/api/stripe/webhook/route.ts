@@ -44,6 +44,18 @@ export async function POST(request: Request) {
         const session = event.data.object as Stripe.Checkout.Session;
         await applyCheckoutCompleted(session);
         const checkId = session.metadata?.checkId ?? session.client_reference_id;
+        if (checkId && session.payment_status === "paid") {
+          await track("checkout_completed", {
+            checkId,
+            value: session.amount_total ?? null,
+          });
+        }
+        break;
+      }
+      case "checkout.session.async_payment_succeeded": {
+        const session = event.data.object as Stripe.Checkout.Session;
+        await applyCheckoutCompleted(session);
+        const checkId = session.metadata?.checkId ?? session.client_reference_id;
         if (checkId) {
           await track("checkout_completed", {
             checkId,

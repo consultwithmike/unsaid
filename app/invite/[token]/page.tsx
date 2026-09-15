@@ -9,11 +9,11 @@ async function fetchPreview(token: string): Promise<InvitePreview> {
     const base = await getBaseUrl();
     const res = await fetch(`${base}/api/invitations/${token}`, { cache: "no-store" });
     if (!res.ok) {
-      return { inviterFirstName: "", valid: res.status !== 410, expired: res.status === 410 };
+      return { inviterFirstName: "", valid: false, expired: res.status === 410 };
     }
     return await res.json();
   } catch {
-    return { inviterFirstName: "", valid: true };
+    return { inviterFirstName: "", valid: false };
   }
 }
 
@@ -32,6 +32,17 @@ export default async function InviteTokenPage({
         <h1 className="font-display text-[28px]">This invitation has expired.</h1>
         <p className="text-[var(--color-ink)]/70">
           Ask {inviterName} to create a new invitation.
+        </p>
+      </div>
+    );
+  }
+
+  if (!preview.valid) {
+    return (
+      <div className="container-content flex flex-col items-center gap-4 py-20 text-center">
+        <h1 className="font-display text-[28px]">This invitation link isn&rsquo;t valid.</h1>
+        <p className="text-[var(--color-ink)]/70">
+          Double-check the link, or ask your partner to send a new invitation.
         </p>
       </div>
     );

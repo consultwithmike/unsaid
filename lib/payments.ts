@@ -142,6 +142,17 @@ export async function applyCheckoutCompleted(
     return;
   }
 
+  // Async payment methods can emit checkout.session.completed before funds
+  // clear — never unlock unless Stripe reports the session as paid.
+  if (session.payment_status !== "paid") {
+    console.warn(
+      "[stripe] checkout.session.completed ignored; payment_status=",
+      session.payment_status,
+      session.id,
+    );
+    return;
+  }
+
   const paymentIntentId =
     typeof session.payment_intent === "string"
       ? session.payment_intent

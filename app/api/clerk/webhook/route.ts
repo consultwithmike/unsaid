@@ -52,11 +52,40 @@ export async function POST(request: Request) {
   try {
     switch (event.type) {
       case "user.deleted": {
-        await sql()`
-          UPDATE profiles
-             SET deleted_at = COALESCE(deleted_at, now()), updated_at = now()
-           WHERE clerk_user_id = ${clerkUserId}
+        const [profile] = await sql()<{ id: string }>`
+          SELECT id FROM profiles WHERE clerk_user_id = ${clerkUserId}
         `;
+
+        if (profile) {
+          const checks = await sql()<{ id: string }>`
+            UPDATE checks
+               SET status = 'deleted', deleted_at = now(), last_activity_at = now()
+             WHERE id IN (
+                   SELECT check_id FROM check_participants WHERE profile_id = ${profile.id}
+                 )
+               AND deleted_at IS NULL
+            RETURNING id
+          `;
+
+          for (const check of checks) {
+            await sql()`
+              INSERT INTO deletion_queue (subject_type, subject_id, reason)
+              VALUES ('check', ${check.id}, 'clerk_user_deleted')
+            `;
+          }
+
+          await sql()`
+            UPDATE profiles
+               SET deleted_at = COALESCE(deleted_at, now()), updated_at = now()
+             WHERE id = ${profile.id}
+          `;
+
+          await sql()`
+            INSERT INTO deletion_queue (subject_type, subject_id, reason)
+            VALUES ('profile', ${profile.id}, 'clerk_user_deleted')
+          `;
+        }
+
         await sql()`
           INSERT INTO deletion_queue (subject_type, subject_id, reason)
           VALUES ('clerk_user', ${clerkUserId}, 'clerk_user_deleted')

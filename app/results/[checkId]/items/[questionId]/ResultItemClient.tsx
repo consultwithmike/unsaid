@@ -166,6 +166,10 @@ export function ResultItemClient({
 
 function formatAnswer(answer: ResultItemDetail["ownAnswer"] | null | undefined) {
   if (answer === null || answer === undefined) return "—";
+  // Defensive: some payloads may wrap as `{ answer: ... }`.
+  if (typeof answer === "object" && !Array.isArray(answer) && answer !== null && "answer" in answer) {
+    return formatAnswer((answer as { answer: ResultItemDetail["ownAnswer"] }).answer);
+  }
   if (Array.isArray(answer)) return answer.join(", ");
   return String(answer);
 }

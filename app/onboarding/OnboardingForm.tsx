@@ -7,10 +7,18 @@ import { apiPatch } from "@/lib/api-client";
 import { ERROR_COPY } from "@/lib/copy";
 import type { MeResponse } from "@/lib/types";
 
+function safeNextPath(raw: string | null): string {
+  if (!raw) return "/dashboard";
+  // Relative in-app paths only — reject absolute / scheme-relative URLs.
+  if (!raw.startsWith("/") || raw.startsWith("//")) return "/dashboard";
+  if (!/^\/[a-zA-Z0-9/_\-?=&%[\].,~]*$/.test(raw)) return "/dashboard";
+  return raw;
+}
+
 export function OnboardingForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = params.get("next") || "/dashboard";
+  const next = safeNextPath(params.get("next"));
 
   const [firstName, setFirstName] = useState("");
   const [preferredName, setPreferredName] = useState("");
