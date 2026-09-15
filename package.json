@@ -1,12 +1,48 @@
 {
   "name": "unsaid",
+  "version": "0.1.0",
   "private": true,
   "engines": {
     "node": ">=20.11.0"
   },
   "packageManager": "npm@10",
   "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "validate:content": "node scripts/validate-content.mjs",
-    "generate:questions": "node scripts/generate-question-bank.mjs"
+    "generate:questions": "node scripts/generate-question-bank.mjs",
+    "seed:questions": "tsx scripts/seed-questions.ts"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^6.12.0",
+    "@netlify/database": "^2.0.1",
+    "@react-email/components": "^0.0.34",
+    "drizzle-orm": "beta",
+    "next": "15.5.25",
+    "react": "19.1.4",
+    "react-dom": "19.1.4",
+    "resend": "^4.1.2",
+    "stripe": "^17.7.0",
+    "svix": "^1.61.0",
+    "zod": "^3.24.2",
+    "@netlify/functions": "^6.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "drizzle-kit": "beta",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.25",
+    "tailwindcss": "^4",
+    "tsx": "^4.19.3",
+    "typescript": "^5",
+    "vitest": "^3.0.8"
   }
 }
