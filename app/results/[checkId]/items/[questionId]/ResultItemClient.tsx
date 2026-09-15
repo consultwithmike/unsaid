@@ -24,11 +24,18 @@ export function ResultItemClient({
 
   useEffect(() => {
     (async () => {
+      // `include=own` is always requested: the API only ever adds the
+      // caller's own answer (never the partner's, unless the reveal is
+      // already mutual), so this is safe and lets the mutual-reveal view
+      // render both answers on first load without a second round trip.
       const result = await apiGet<ResultItemDetail>(
-        `/api/results/${checkId}/items/${questionId}`,
+        `/api/results/${checkId}/items/${questionId}?include=own`,
       );
       if (result.ok) {
         setItem(result.data);
+        if (result.data.ownAnswer !== undefined) {
+          setOwnAnswer(result.data.ownAnswer ?? null);
+        }
       } else {
         setLoadFailed(true);
       }
