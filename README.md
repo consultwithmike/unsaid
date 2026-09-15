@@ -20,9 +20,12 @@ Private, double-blind premarital compatibility check. Two people answer the same
 ## Docs
 
 - [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
+- [Copy deck](docs/COPY.md)
+- [API contract](docs/API_CONTRACT.md)
 - [Data model](docs/DATA_MODEL.md)
 - [Scoring](docs/SCORING.md)
 - [Privacy](docs/PRIVACY.md)
+- [Question bank 2026.09](content/questions/2026.09.json)
 
 ## Deploy rule
 

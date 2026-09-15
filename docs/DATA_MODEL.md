@@ -196,8 +196,31 @@ UNIQUE `(check_id, question_id)`.
 ### reminder_log
 `(check_id, sender_profile_id, sent_at)` — enforce 24h throttle.
 
+### rate_limits
+| Column | Type | Notes |
+| --- | --- | --- |
+| bucket | text | e.g. `invite_create`, `checkout` |
+| subject | text | profile id / check id / ip hash |
+| window_start | timestamptz | |
+| count | int | |
+
+UNIQUE `(bucket, subject, window_start)`.
+
+### analytics_events
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | uuid PK | |
+| event_name | text | allowlist only — see API_CONTRACT §12 |
+| profile_id | uuid | nullable |
+| check_id | uuid | nullable opaque |
+| props | jsonb | scrubbed; no answers/topics |
+| created_at | timestamptz | |
+
 ### deletion_queue
-Encrypted blobs / row references scheduled for purge after check/account delete.
+Encrypted blobs / row references scheduled for purge after check/account delete or Clerk `user.deleted`.
+
+### Follow-ups
+`CP07F` / `MO04F` are rows in `questions` with `parent_code`. Responses store follow-up answer on the follow-up `question_id` (not embedded only in parent ciphertext). Parent ciphertext remains the scalar AG5 answer.
 
 ---
 
