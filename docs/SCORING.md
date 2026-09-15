@@ -49,7 +49,9 @@ Q(q) = 100 * (1 - d(q))
 AlignmentIndex = round(100 * (1 - Σ(d*w) / Σw))
 ```
 
-Same formula per category section → `category_scores`.
+Same formula per category section → `category_scores` / API `categoryScores`.
+
+Results UI must show **Alignment by topic** (weakest sections first) using these scores — not only the overall Alignment Index.
 
 ## Hard-line collision
 

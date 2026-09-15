@@ -39,7 +39,7 @@ All response/result/payment writes happen in Next.js Route Handlers / Server Act
 | created_at | timestamptz | |
 | expires_at | timestamptz | |
 | unlocked_at | timestamptz | |
-| payment_status | text NOT NULL DEFAULT `unpaid` | unpaid \| paid \| refunded |
+| payment_status | text NOT NULL DEFAULT `unpaid` | unpaid \| paid \| refunded — refunded re-locks API to teaser |
 | algorithm_version | text | set when results generated |
 | encrypted_dek | bytea | wrapped per-check data key |
 | last_activity_at | timestamptz | retention |
@@ -127,7 +127,7 @@ Importance/hard_line stored as columns for scoring; answer value stays encrypted
 
 | Column | Type | Notes |
 | --- | --- | --- |
-| check_id | uuid PK → checks | |
+| check_id | uuid PK → checks | **PK = idempotency** — concurrent calculate uses `ON CONFLICT DO NOTHING` |
 | algorithm_version | text NOT NULL | e.g. `1.0.0` |
 | question_set_version | text NOT NULL | |
 | alignment_index | numeric NOT NULL | |
@@ -136,8 +136,10 @@ Importance/hard_line stored as columns for scoring; answer value stays encrypted
 | conversation_count | int NOT NULL | |
 | major_count | int NOT NULL | |
 | hard_line_collision_count | int NOT NULL | |
-| category_scores | jsonb | |
+| category_scores | jsonb | `[{ sectionId, label, alignmentIndex }]` for results “By topic” |
 | generated_at | timestamptz | |
+
+Calculate path: `SELECT checks FOR UPDATE` then insert results. Never silently recompute. Refunds re-lock access but **do not delete** this row.
 
 ---
 
@@ -220,7 +222,13 @@ UNIQUE `(bucket, subject, window_start)`.
 Encrypted blobs / row references scheduled for purge after check/account delete or Clerk `user.deleted`.
 
 ### Follow-ups
-`CP07F` / `MO04F` are rows in `questions` with `parent_code`. Responses store follow-up answer on the follow-up `question_id` (not embedded only in parent ciphertext). Parent ciphertext remains the scalar AG5 answer.
+Bank codes `CP07F` / `MO04F` are rows in `questions` with `parent_code`. Responses store follow-up answers as **separate rows** on the follow-up `question_id`. Parent ciphertext is scalar AG5 only — never embed MULTI/ORD follow-up arrays in the parent payload.
+
+### Offline / client
+No server table. Client IndexedDB queue per [FLOWS.md](./FLOWS.md) §7.
+
+### Account export
+No separate table — `GET /api/account/export` assembles JSON from profile, checks, own responses (decrypt), payments.
 
 ---
 

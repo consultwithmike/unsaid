@@ -4,21 +4,24 @@ All routes are Next.js Route Handlers unless noted. Auth via Clerk `await auth()
 
 Base: same origin. No CORS headers.
 
+Flows that span multiple routes: [FLOWS.md](./FLOWS.md).
+
 ---
 
 ## 1. Authz matrix
 
 | Route | Auth | Participant rule |
 | --- | --- | --- |
-| `POST /api/checks` | Required | Creates check; caller becomes role A |
+| `POST /api/checks` | Required | Profile complete; creates check; caller becomes role A |
 | `GET /api/checks/:id` | Required | Must be participant |
 | `POST /api/checks/:id/invite` | Required | Role A only; blocked if B has started answering |
-| `POST /api/invitations/:token/accept` | Required | Not already participant; not same profile as A; invite valid |
-| `GET /api/responses?checkId=` | Required | Own participant row only |
+| `POST /api/invitations/:token/accept` | Required | Profile complete; not already participant; not creator; invite valid |
+| `GET /api/responses?checkId=` | Required | Own participant row only (+ resume cursor) |
 | `POST /api/responses` | Required | Own participant; check not deleted/expired |
-| `POST /api/assessment/complete` | Required | Own participant; all required answers present |
-| `POST /api/checks/:id/calculate` | Required | Participant; both complete; idempotent |
+| `POST /api/assessment/complete` | Required | Own participant; all required answers present; offline queue empty |
+| `POST /api/checks/:id/calculate` | Required | Participant; both complete; idempotent (PK on results) |
 | `POST /api/checks/:id/checkout` | Required | **Either** participant; status `ready`; unpaid |
+| `GET /api/checks/:id/checkout/status` | Required | Participant; verifies Stripe session; **does not unlock** |
 | `POST /api/stripe/webhook` | **Public** | Stripe signature only |
 | `GET /api/results/:checkId` | Required | Participant; payload depends on status (below) |
 | `GET /api/results/:checkId/items/:questionId` | Required | Participant; unlocked for full item; own answer optional |
@@ -27,9 +30,13 @@ Base: same origin. No CORS headers.
 | `POST /api/checks/:id/remind` | Required | Participant who completed; 24h throttle |
 | `POST /api/checks/:id/retake` | Required | Participant on unlocked/ready check; creates **new** check |
 | `DELETE /api/checks/:id` | Required | Participant |
+| `GET /api/account/export` | Required | Caller only; own data JSON |
 | `DELETE /api/account` | Required | Caller only |
+| `GET /api/me` | Required | Profile + completeness flag |
+| `PATCH /api/me` | Required | Upsert first name, 18+, optional fields |
 | `POST /api/clerk/webhook` | **Public** | Clerk signature; user.deleted → purge queue |
-| `GET /api/health` | **Public** | `SELECT 1` |
+| `GET /api/health` | **Public** | `SELECT 1` via `@netlify/database` |
+| `GET /api/admin/*` | Required | Email ∈ `ADMIN_EMAILS` |
 
 **Never exist:** any route that returns partner answers without `reveals.status = mutual`.
 
@@ -37,22 +44,33 @@ Base: same origin. No CORS headers.
 
 ## 2. Middleware public paths
 
-Clerk middleware must allow unauthenticated access to:
+Allow unauthenticated:
 
 - `/` and marketing/SEO pages
 - `/privacy`, `/terms`, `/disclaimer`
 - `/sign-in(.*)`
-- `/invite/(.*)` (page shell; accept still requires auth)
+- `/invite/(.*)` (page shell + token display; accept/continue require auth)
 - `/api/stripe/webhook`
 - `/api/clerk/webhook`
 - `/api/health`
-- Static assets / `_next`
+- Static / `_next`
 
-Everything under `/(app)` and remaining `/api/*` requires a signed-in user.
+Require auth: `/(app)/*`, `/onboarding`, `/invite/continue`, `/admin(.*)`, remaining `/api/*`.
+
+Admin paths: signed-in **and** primary email in `ADMIN_EMAILS` (else 404).
 
 ---
 
-## 3. Ready vs unlocked results payload
+## 3. Profile completeness
+
+`GET /api/me` → `{ profile, complete: boolean }`  
+`complete = firstName present && ageConfirmed18 === true`
+
+`POST /api/checks` and invitation accept return **403** `{ code: "PROFILE_INCOMPLETE" }` if not complete. Client sends user to `/onboarding?next=…`.
+
+---
+
+## 4. Ready vs unlocked results payload
 
 ### `GET /api/results/:checkId` when `status = ready` (locked)
 
@@ -65,13 +83,12 @@ Everything under `/(app)` and remaining `/api/*` requires a signed-in user.
   "hardLineCollisionCount": 1,
   "alignmentIndex": null,
   "counts": null,
+  "categoryScores": null,
   "items": null,
   "priceCents": 2900,
   "currency": "usd"
 }
 ```
-
-Teaser may show conversation **count** and hard-line collision **count** only. No item list, no Alignment Index detail cards, no prompts.
 
 ### when `status = unlocked`
 
@@ -89,6 +106,10 @@ Teaser may show conversation **count** and hard-line collision **count** only. N
     "major": 1,
     "hardLineCollisions": 1
   },
+  "categoryScores": [
+    { "sectionId": "children_parenting", "label": "Children & parenting", "alignmentIndex": 42 },
+    { "sectionId": "money", "label": "Money", "alignmentIndex": 81 }
+  ],
   "items": [
     {
       "questionId": "…",
@@ -108,57 +129,48 @@ Teaser may show conversation **count** and hard-line collision **count** only. N
 }
 ```
 
-Items sorted by `impact` desc. **No answer fields.**
+Items sorted by `impact` desc. **No answer fields.**  
+`categoryScores` sorted ascending by `alignmentIndex` (weakest categories first) for UI “By topic” section.
+
+If `payment_status = refunded`, API behaves as **ready/locked** teaser even though `results` rows remain stored.
 
 ---
 
-## 4. Own answers
+## 5. Own answers & resume cursor
 
-### During assessment — `GET /api/responses?checkId=`
-
-Returns **only the caller’s** responses (decrypted for self):
+### `GET /api/responses?checkId=`
 
 ```json
 {
   "participantId": "…",
+  "answerCount": 12,
+  "requiredCount": 96,
+  "followUpsPending": ["CP07F"],
+  "currentSectionId": "money",
+  "currentQuestionCode": "MO04",
+  "sectionProgress": { "index": 2, "answeredInSection": 4, "sectionSize": 8 },
   "answers": [
     {
       "questionId": "…",
       "code": "MO03",
       "answer": 4,
-      "followUp": null,
       "importance": 5,
       "hardLine": true
     }
-  ],
-  "answerCount": 12
+  ]
 }
 ```
 
-### On results — `GET /api/results/:checkId/items/:questionId`
+Own answers only. Cursor algorithm: [FLOWS.md](./FLOWS.md) §4.
 
-Default body: item metadata + prompts + `revealStatus` — **no answers**.
+### Results item — `GET /api/results/:checkId/items/:questionId`
 
-Query `?include=own` adds:
-
-```json
-{ "ownAnswer": { "answer": 5, "label": "Strongly agree", "importance": 5, "hardLine": true } }
-```
-
-Partner answer included **only** if `revealStatus === "mutual"`:
-
-```json
-{
-  "revealed": {
-    "a": { "answer": 5, "label": "…" },
-    "b": { "answer": 1, "label": "…" }
-  }
-}
-```
+Default: metadata + prompts + `revealStatus` — **no answers**.  
+`?include=own` → `ownAnswer`. Partner only if `revealStatus === "mutual"`.
 
 ---
 
-## 5. Response upsert
+## 6. Response upsert (no embedded follow-ups)
 
 `POST /api/responses`
 
@@ -167,7 +179,18 @@ Partner answer included **only** if `revealStatus === "mutual"`:
   "checkId": "…",
   "questionCode": "CP07",
   "answer": 5,
-  "followUp": ["public_school", "private_school"],
+  "importance": 4,
+  "hardLine": false
+}
+```
+
+Follow-up example:
+
+```json
+{
+  "checkId": "…",
+  "questionCode": "CP07F",
+  "answer": ["public_school", "private_school"],
   "importance": 4,
   "hardLine": false
 }
@@ -175,110 +198,65 @@ Partner answer included **only** if `revealStatus === "mutual"`:
 
 Rules:
 
-- `hardLine` accepted only if `importance >= 4`; otherwise forced `false`
-- Follow-ups: `CP07` MULTI required when AG5 ∈ {4,5}; `MO04` threshold ORD when parent answered
-- Encrypt answer (+ followUp) with check DEK; store importance/hardLine as columns
-- Increment `answer_count` for distinct questions answered
+- One question code per request (parent **or** follow-up)
+- `hardLine` only if `importance >= 4`; else forced `false`
+- Follow-up rows: `CP07F` required when parent `CP07` ∈ {4,5}; `MO04F` when parent `MO04` ∈ {3,4,5}
+- Encrypt `{ answer }` only with check DEK
 - Idempotent upsert on `(participant_id, question_id)`
+- Reject complete while required follow-ups missing
 
 ---
 
-## 6. Reveal
+## 7. Reveal / discussed
 
-`POST /api/results/:checkId/items/:questionId/reveal`
-
-```json
-{ "action": "request" | "consent" | "decline" }
-```
-
-State machine: `none` → `requested_by_a` | `requested_by_b` → `mutual`.  
-On `mutual`, set `revealed_at`. Irreversible. Email partner on `request` (non-sensitive subject).
+Unchanged state machine: `none` → `requested_by_a|b` → `mutual` (irreversible).  
+Discussed sets `result_items.discussed_at`.
 
 ---
 
-## 7. Discussed
+## 8. Checkout, return URL, webhooks
 
-`POST /api/results/:checkId/items/:questionId/discussed`
+`POST /api/checks/:id/checkout` → `{ url }`  
+Session `success_url` / `cancel_url`: [FLOWS.md](./FLOWS.md) §6.
 
-```json
-{ "discussed": true }
-```
+`GET /api/checks/:id/checkout/status?session_id=` → `{ stripeStatus, checkStatus }` — **never** unlocks.
 
-Sets `result_items.discussed_at = now()` (or null if false).
+`POST /api/stripe/webhook`:
 
----
-
-## 8. Checkout & webhook
-
-`POST /api/checks/:id/checkout` — either participant; Stripe Checkout Session; metadata:
-
-- `check_id`
-- `purchasing_clerk_user_id`
-- `product_version`
-
-`POST /api/stripe/webhook` — verify signature; on `checkout.session.completed`:
-
-- Insert/update `payments`
-- `checks.payment_status = paid`
-- `checks.unlocked_at = now()`
-- `checks.status = unlocked`
-- Idempotent on `stripe_checkout_session`
-
-Do **not** unlock on client return URL alone. Return URL may poll results until `unlocked`.
-
----
-
-## 9. Retake
-
-`POST /api/checks/:id/retake`
-
-Creates a **new** check for the same two profiles (new id, new DEK, unpaid). Original row untouched. Returns `{ newCheckId, invite optional }`. Price still $29 when both complete again.
-
----
-
-## 10. Accept invitation — abuse rules
-
-Reject with 403/409 when:
-
-- Token hash unknown or expired
-- Invitation already accepted
-- Caller is role A (self-join)
-- Check already has participant B
-- B has started answering and caller is a different user trying to replace (should not happen if accept-once)
-
----
-
-## 11. Rate limits (DB-backed MVP)
-
-Table `rate_limits (bucket text, subject text, window_start timestamptz, count int)`  
-Or per-feature logs (`reminder_log`, etc.).
-
-| Action | Limit |
+| Event | Effect |
 | --- | --- |
-| Invite create | 10 / profile / day |
-| Reminder | 1 / check / sender / 24h |
-| Checkout session create | 10 / check / hour |
-| Reveal request | 30 / check / day |
-| OTP / account (Clerk) | rely on Clerk + soft IP limit on accept |
+| `checkout.session.completed` | Pay + unlock; idempotent on session id |
+| `charge.refunded` (full / MVP any) | `payment_status=refunded`; re-lock check to teaser; keep results rows |
+| `checkout.session.expired` | No status change |
+
+Do **not** unlock on client return alone. Success page polls until `unlocked` or timeout.
 
 ---
 
-## 12. Analytics (server allowlist)
+## 9. Calculate
 
-Provider: **first-party** `analytics_events` table (no third-party payloads with relationship content).
+`POST /api/assessment/complete` (second completer) and `POST /api/checks/:id/calculate`:
 
-Allowed `event_name` values only:
-
-`landing_viewed`, `start_clicked`, `check_created`, `invitation_created`, `partner_joined`, `assessment_started`, `section_completed`, `assessment_completed`, `check_ready`, `checkout_started`, `purchase_completed`, `results_viewed`, `conversation_opened`, `reveal_requested`, `reveal_completed`, `check_deleted`, `retake_started`, `share_tapped`
-
-Forbidden properties: answers, importance, hard lines, question codes tied to mismatches, section names for sexual/religious/political content, free text.
-
-Allowed properties: `check_id` (opaque), `role`, `section_index` (0–11), `source`, `value` (numeric counts only).
+- `SELECT checks FOR UPDATE`
+- Insert `results` with `ON CONFLICT (check_id) DO NOTHING`
+- On insert: write `result_items`, `category_scores`, set `checks.status=ready`
+- If row already exists: return existing summary; no recompute
 
 ---
 
-## 13. Calculation timing
+## 10. Account export
 
-Do **not** score on each answer save.  
-Run when both `completed_at` set — from `POST /api/assessment/complete` (second completer) or explicit `POST /api/checks/:id/calculate`.  
-Persist `algorithm_version` + `question_set_version`. Never silently recompute historical results.
+`GET /api/account/export` → `Content-Disposition: attachment; filename="unsaid-export.json"`  
+Contents: [FLOWS.md](./FLOWS.md) §10. Own answers only.
+
+---
+
+## 11. Retake / accept abuse / rate limits / analytics
+
+See prior sections + [FLOWS.md](./FLOWS.md). Analytics allowlist unchanged (first-party table only).
+
+---
+
+## 12. Health
+
+`GET /api/health` must use `getDatabase()` from `@netlify/database` inside the Route Handler on a real Netlify deploy (Phase 0 proof).

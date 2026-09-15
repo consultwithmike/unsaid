@@ -20,12 +20,20 @@ Private, double-blind premarital compatibility check. Two people answer the same
 ## Docs
 
 - [Implementation plan](docs/IMPLEMENTATION_PLAN.md)
+- [Flows](docs/FLOWS.md) — invite handoff, Stripe, offline, admin
 - [Copy deck](docs/COPY.md)
 - [API contract](docs/API_CONTRACT.md)
 - [Data model](docs/DATA_MODEL.md)
-- [Scoring](docs/SCORING.md)
+- [Scoring](docs/SCORING.md) · [Golden fixtures](content/fixtures/scoring-golden.json)
 - [Privacy](docs/PRIVACY.md)
+- [Design tokens](docs/DESIGN_TOKENS.md)
+- [SEO briefs](docs/SEO_BRIEFS.md)
+- [Emails](docs/EMAILS.md)
 - [Question bank 2026.09](content/questions/2026.09.json)
+
+## Engineering stubs
+
+- `.env.example` · `package.json` (Node ≥ 20) · `netlify.toml` · `.github/workflows/ci.yml`
 
 ## Deploy rule
 

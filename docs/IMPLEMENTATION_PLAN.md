@@ -11,12 +11,19 @@ Companion docs (do not invent copy or contracts elsewhere):
 
 | Doc | Role |
 | --- | --- |
-| [COPY.md](./COPY.md) | Screens, emails, tone, errors, principles |
-| [API_CONTRACT.md](./API_CONTRACT.md) | Routes, authz, ready vs unlocked, own answers |
+| [COPY.md](./COPY.md) | Screens, emails, tone, errors, principles, campaign lines |
+| [FLOWS.md](./FLOWS.md) | Invite handoff, profile gate, Stripe return/refund, offline queue, admin |
+| [API_CONTRACT.md](./API_CONTRACT.md) | Routes, authz, ready vs unlocked, resume cursor, export |
 | [DATA_MODEL.md](./DATA_MODEL.md) | Tables + migrations |
 | [SCORING.md](./SCORING.md) | Algorithm 1.0.0 |
-| [PRIVACY.md](./PRIVACY.md) | Invariants |
-| [`content/questions/2026.09.json`](../content/questions/2026.09.json) | Full 96-question bank + follow-ups + matrices |
+| [PRIVACY.md](./PRIVACY.md) | Invariants + export |
+| [DESIGN_TOKENS.md](./DESIGN_TOKENS.md) | Color/type lock for build |
+| [SEO_BRIEFS.md](./SEO_BRIEFS.md) | Seven editorial pages |
+| [EMAILS.md](./EMAILS.md) | React Email + Resend |
+| [`content/questions/2026.09.json`](../content/questions/2026.09.json) | Question bank |
+| [`content/fixtures/scoring-golden.json`](../content/fixtures/scoring-golden.json) | Golden scoring cases |
+
+Engineering stubs: `.env.example`, `package.json` (Node 20), `netlify.toml`, `.github/workflows/ci.yml`.
 
 ---
 
@@ -124,13 +131,7 @@ flowchart TB
 
 ## 5. Design system
 
-Tokens (CSS variables): ivory `#FAF7F2`, ink `#181416`, wine `#54263A`, wine-dark `#3F1C2C`, rose `#B8667A`, stone `#EEE9E4`, sage `#6E806F`, ochre `#B47A32`, brick `#A34D46`, warm-gray `#DDD6D0`, white.
-
-Typography: Newsreader (display) + Inter (UI). Mobile type scale per product lock. Buttons 52px / radius 14px. Content max 640px; results desktop 960px. Cards radius 18px; prefer borders over heavy shadows.
-
-Motion: hero fade-rise; answer press; results unlock. Respect `prefers-reduced-motion`.
-
-Assessment: one question per screen; sticky bottom CTA; thumb-sized targets ≥ 44px; browser back works.
+See [DESIGN_TOKENS.md](./DESIGN_TOKENS.md) — intentional MVP lock (Newsreader + Inter, ivory/wine, AA contrast). Assessment: one question per screen; sticky CTA; targets ≥ 44px; browser back works; section-complete interstitial.
 
 ---
 
@@ -152,25 +153,35 @@ Migrations: `netlify/database/migrations/<number>_<slug>/migration.sql`.
 
 Schema: [DATA_MODEL.md](./DATA_MODEL.md). Includes `analytics_events`, `rate_limits`, follow-up-capable `responses`.
 
-Crypto: per-check DEK wrapped by `ANSWER_MASTER_KEY`; encrypt `{ answer, followUp? }`; importance + hard_line columns for scoring.
+Crypto: per-check DEK wrapped by `ANSWER_MASTER_KEY`; encrypt `{ answer }` per question row (follow-ups are separate rows); importance + hard_line columns for scoring.
 
 ---
 
 ## 8. Product flows (locked decisions)
 
-**Own answers:** Always readable by the answering participant (assessment GET + results `?include=own`). Not a mutual reveal.
+Full detail: [FLOWS.md](./FLOWS.md).
 
-**Results default:** Prompts + classification only; neither answer shown until mutual reveal (own available via explicit control).
+**Invite handoff:** HttpOnly cookie `unsaid_pending_invite` + Clerk fallback redirect → `/invite/continue`.
 
-**Paywall:** `ready` returns teaser counts only; `unlocked` returns full items. Either participant can start Checkout.
+**Profile gate:** first name + 18+ required before create/accept; `/onboarding?next=`.
 
-**Follow-ups:** `CP07F` when CP07 ≥ 4; `MO04F` when MO04 ≥ 3. Same screen accordion; stored as linked codes.
+**Own answers:** Always readable by owner; partner only after mutual reveal.
 
-**Self-join:** Reject accept if caller is creator.
+**Follow-ups:** Separate bank rows `CP07F` / `MO04F` + separate response rows (never embed in parent).
 
-**Retake:** New check row; never overwrite; still $29 when both complete.
+**Results:** Prompts + classification by default; `categoryScores` “By topic”; section-complete interstitial in assessment.
 
-**Mark discussed:** `discussed_at` on `result_items`.
+**Paywall:** Either participant; success URL polls; unlock **only** via webhook; refunds re-lock.
+
+**Calculate:** `FOR UPDATE` + `results.check_id` PK idempotency.
+
+**Offline:** IndexedDB queue; block complete while non-empty.
+
+**Admin:** `ADMIN_EMAILS` middleware allowlist; refunds via Stripe; no answer decrypt.
+
+**Export:** `GET /api/account/export` own data JSON.
+
+**Locale:** en-US only.
 
 ---
 
@@ -178,41 +189,41 @@ Crypto: per-check DEK wrapped by `ANSWER_MASTER_KEY`; encrypt `{ answer, followU
 
 Full contract: [API_CONTRACT.md](./API_CONTRACT.md).
 
-Must implement (were previously missing): `GET /api/responses`, discussed, retake, Clerk webhook, health, checkout for either participant, public Stripe webhook.
+Must implement (were previously missing): resume cursor on `GET /api/responses`, discussed, retake, Clerk webhook, health, checkout for either participant, checkout status poll, Stripe refund webhook, account export, public Stripe webhook.
 
 ---
 
 ## 10. Phased delivery
 
 ### Phase 0 — Deployable foundation
-Next.js + Clerk + Netlify Database on a **linked Netlify site**. Design tokens. Migrations for profiles + health. Prove Route Handler `SELECT 1`. Document env. Exit: production URL green.
+Next.js + Clerk + Netlify Database on a **linked Netlify site**. Tokens from DESIGN_TOKENS. Migrations for profiles + health. Prove Route Handler `SELECT 1`. Wire `.env` from `.env.example`. CI green on PR. Exit: production URL health OK.
 
 ### Phase 1 — Landing + legal
-COPY.md landing · `/privacy` `/terms` `/disclaimer` · analytics `landing_viewed` / `start_clicked` · LCP ~2s.
+COPY landing + campaign lines · `/privacy` `/terms` `/disclaimer` · support footer · analytics · LCP ~2s.
 
-### Phase 2 — Auth + profile + dashboard shell
-OTP · profile upsert · 18+ · dashboard list shape (names, status, date, AI, conversations, delete).
+### Phase 2 — Auth + onboarding + dashboard
+OTP · `/onboarding` gate · `GET/PATCH /api/me` · dashboard list · account export + delete UI.
 
 ### Phase 3 — Bank + scoring
-Ship bank JSON · seed questions · `shared/scoring.ts` unit tests for AG5/ORD/MULTI/CP02/MO02/HL02/hard-line/follow-ups.
+Ship bank JSON · seed questions · `shared/scoring.ts` against **golden fixtures** · follow-up exclusion rules.
 
 ### Phase 4 — Checks + invites
-Create · invite hash 128-bit · 30-day · Web Share · accept · self-join block · partner lock after B starts · invite email · rate limits.
+Create · invite cookie handoff · accept · self-join block · partner lock · invite email · rate limits · preview Clerk URLs documented.
 
 ### Phase 5 — Assessment
-Section intros from bank · importance/hard-line UI from COPY · follow-ups · optimistic save + offline queue · waiting + reminder 1/24h · no pre-score.
+Section intros + **section-complete interstitial** · importance/hard-line · follow-ups as separate POSTs · resume cursor · IndexedDB offline queue · waiting + reminder · no pre-score.
 
 ### Phase 6 — Calculate + Stripe
-Both complete → calculate → ready teaser → Checkout (A or B) → webhook unlock → emails.
+Idempotent calculate · ready teaser · Checkout either party · success poll page · webhook unlock + **refund re-lock** · emails.
 
 ### Phase 7 — Results + reveal
-Headline conversations · Alignment Index · impact list · detail · see my answer · mutual reveal · discussed · retake · viral share · inference honesty copy.
+Conversations headline · Alignment Index · **By topic** category scores · impact list · own answer · mutual reveal · discussed · retake · viral share.
 
 ### Phase 8 — Trust
-Account/check delete + Clerk webhook · 90-day retention cron · Sentry scrub · a11y (WCAG AA, focus, SR progress, non-color severity labels “Major conversation”) · error states from COPY §16.
+Clerk user.deleted · retention cron · Sentry scrub · a11y · COPY error states · support contact.
 
 ### Phase 9 — SEO + PWA + admin
-Seven editorial routes · PWA manifest/icons/shell SW · `/admin` funnel + question versions + payment status + refund via Stripe (no plaintext answer browse).
+SEO_BRIEFS pages · PWA shell · `/admin` with ADMIN_EMAILS · Stripe refund tool.
 
 ---
 

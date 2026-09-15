@@ -17,6 +17,8 @@ Relationship answers are unusually sensitive. Treat them as such.
 8. **Hard-line authorship is private.** Results may say “at least one of you considers this especially important.” Never “Andrea marked a hard line.”
 9. Participants may always read **their own** answers (assessment + `?include=own` on results). That is not a reveal.
 10. Self-join is forbidden: the check creator cannot accept their own invitation token.
+11. **Account export** (`GET /api/account/export`) returns only the caller’s data and answers—never the partner’s.
+12. Full Stripe refunds **re-lock** results to the teaser payload; encrypted answers remain until account/check deletion.
 
 ## Acknowledge inference
 
@@ -29,7 +31,7 @@ Only `mutual` decrypts and returns both answers. Irreversible.
 
 ## Encryption
 
-- AES-256-GCM for answer JSON `{ answer, followUp? }`
+- AES-256-GCM for answer JSON `{ answer }` per question row (follow-ups are separate rows)
 - Per-check DEK stored wrapped in `checks.encrypted_dek`
 - Master key: `ANSWER_MASTER_KEY` in Netlify env
 
@@ -42,9 +44,10 @@ Only `mutual` decrypts and returns both answers. Irreversible.
 | Deleted checks | Queue encrypted answers for permanent deletion |
 | Payments | Retain accounting-required fields only |
 | Clerk `user.deleted` webhook | Enqueue same purge path as `DELETE /api/account` |
+| User export | On-demand JSON; not retained as a server file after download |
 
 ## Legal positioning (surface in UI + `/privacy` `/terms` `/disclaimer`)
 
-Unsaid is a structured communication tool—not therapy, counseling, diagnosis, medical advice, or a predictor of divorce/success. Minimum age 18.
+Unsaid is a structured communication tool—not therapy, counseling, diagnosis, medical advice, or a predictor of divorce/success. Minimum age 18. Support: `SUPPORT_EMAIL`.
 
 Full disclaimer text: [COPY.md](./COPY.md) §2.

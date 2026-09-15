@@ -112,9 +112,19 @@ Start your check
 
 **Sign-in headline:** Check Unsaid  
 **Support:** Email a one-time code. No password.  
-**Fields:** Email → OTP → First name → 18+ confirmation  
-**Optional later:** Preferred name, pronouns  
+**Fields (Clerk):** Email → OTP  
 **CTA:** Continue
+
+### Onboarding gate (`/onboarding`)
+
+Required before creating or joining a check:
+
+**Headline:** What should we call you?  
+**Fields:** First name (required) · I confirm I am 18 or older (required)  
+**Optional:** Preferred name · Pronouns  
+**CTA:** Save and continue  
+
+Incomplete profile attempting create/join → redirect here with return path.
 
 ---
 
@@ -155,8 +165,10 @@ Answer privately and we’ll see what conversations we should have before marria
 
 **Headline:** {InviterName} invited you to check Unsaid together.  
 **Body:** You’ll both answer the same questions independently. Your answers stay yours. When you’re finished, you’ll see the conversations worth having before marriage—not a score that tells you what to do.  
-**CTA:** Join {InviterName}  
-Expired: This invitation has expired. Ask {InviterName} to create a new invitation.
+**CTA (signed out):** Join {InviterName} → stores invite cookie, Clerk OTP, then `/invite/continue`  
+**CTA (signed in):** Join {InviterName} → accept immediately  
+Expired: This invitation has expired. Ask {InviterName} to create a new invitation.  
+Missing cookie on continue: Open your invitation link again.
 
 ---
 
@@ -164,8 +176,14 @@ Expired: This invitation has expired. Ask {InviterName} to create a new invitati
 
 **Progress:** `{Section} · {n} of 8`  
 **Continue:** Continue  
-**Section done:** `{Section} done.` / Your answers have been saved privately.  
-**No scores** before both complete.
+**Section done interstitial:**
+
+> **{Section} done.**  
+> Your answers have been saved privately.  
+> CTA: Continue to {NextSection}
+
+**No scores** before both complete.  
+**Offline banner:** You’re offline. We’ll save this answer when your connection returns.
 
 ### Section intros
 
@@ -223,6 +241,12 @@ Alternate beat (product moment):
 **Band line:** use scoring bands (Mostly aligned / Some important differences / …).  
 **Count cards:** {aligned} aligned · {minor} small differences · {conversations} conversations · {major} major conversation(s)  
 **Hard-line callout (if any):** {k} major hard-line difference(s) — counted separately from the Alignment Index.  
+
+**By topic** (from `categoryScores`, weakest first):
+
+> **Alignment by topic**  
+> {Section label} · Alignment Index {n}  
+
 **List header:** Start with what matters most  
 
 **Item card example:**
@@ -316,12 +340,17 @@ No partner swap. New comparison = new $29 check.
 | --- | --- |
 | Partner hasn’t joined | Still waiting on {Partner}. Your invitation remains active for {days} days. · Send reminder |
 | Payment failed | That payment didn’t go through. Nothing has been charged by Unsaid. · Try again |
+| Checkout cancelled | Checkout was cancelled. Nothing has been charged. |
+| Confirming payment | Confirming payment… |
+| Payment timeout | We’re still confirming your payment. If you were charged, refresh in a minute or contact support. |
+| Refunded / re-locked | This Unsaid was refunded. Detailed results are locked again. |
 | Connection lost | You’re offline. We’ll save this answer when your connection returns. |
 | Saving | Saving… |
 | Invitation expired | This invitation has expired. Ask {Name} to create a new invitation. |
 | Self-join blocked | You can’t accept your own invitation. Share the link with your partner. |
 | Check deleted | This Unsaid is no longer available. |
 | Rate limited | Please wait before trying again. |
+| Profile incomplete | Tell us your first name and confirm you’re 18+ to continue. |
 
 ---
 
@@ -335,6 +364,8 @@ No partner swap. New comparison = new $29 check.
 ---
 
 ## 18. SEO pages (each ends with Check Unsaid together)
+
+Full briefs: [SEO_BRIEFS.md](./SEO_BRIEFS.md).
 
 - `/questions-before-marriage`
 - `/premarital-compatibility`
@@ -351,3 +382,38 @@ No partner swap. New comparison = new $29 check.
 - `/privacy`
 - `/terms`
 - `/disclaimer` (short form of legal positioning; also inline on results)
+
+---
+
+## 20. Support
+
+**Support email:** `support@unsaid.app` (or `SUPPORT_EMAIL` env)  
+**Settings link:** Contact support  
+**Footer:** Questions? support@unsaid.app  
+
+Never ask users to paste assessment answers into email.
+
+**Export:** Settings → Download my data  
+**Confirm download started:** Your export is downloading. It includes only your information and your answers—not your partner’s.
+
+---
+
+## 21. Campaign / marketing lines
+
+Use on landing, ads, SEO closers—not in product chrome.
+
+- You know their favorite food. Do you know whether they expect a parent to live with you someday?
+- You’ve picked a wedding venue. Have you picked how money works?
+- You know how many guests are coming. Do you know how many children you want?
+- You’ve talked about forever. Have you talked about debt?
+- Love answers a lot of questions. Not all of them.
+- Some things are better discovered before “I do.”
+- Always close with: **Before you wed. Check Unsaid.**
+
+---
+
+## 22. Unlock return screen
+
+**Confirming:** Confirming payment…  
+**Success transition:** Opening your Unsaid…  
+**Cancelled:** Checkout was cancelled. Nothing has been charged. · Return to ready screen  
