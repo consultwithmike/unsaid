@@ -53,6 +53,23 @@ Ship the **E2E launch path** (E2E_LOCKS §14), not every Phase 9 nice-to-have.
 - Env via Netlify / `.env.example` — no hardcoded secrets  
 - `.netlify` in `.gitignore`  
 
+## Acceptance — former audit blockers (all doc-locked; must be code-true)
+
+From the MVP plan audit (docs fixed in E2E_LOCKS; implementation must implement):
+
+1. `POST /api/checks` body/response per E2E_LOCKS §1  
+2. Question seed mapping + `display_order numeric` + `show_when` / distance / special  
+3. Dynamic `requiredCount` (96 + CP07F/MO04F rules) — never hardcode 96 when follow-ups pending  
+4. Status machine transitions E2E_LOCKS §2 (no `created`)  
+5. Dual checkout: partial unique open/paid, Stripe idempotency key, late duplicate → refund  
+6. Invite public matcher `^/invite/[^/]+$`; continue at `/invite/continue` + cookie  
+7. Invite replace rules + `409 INVITE_LOCKED`  
+8. Crypto: 32-byte Base64 master key; DEK `iv(12)|tag(16)|ciphertext`  
+9. Partner progress % from answer_count / requiredCount — no decrypt  
+10. Counts map slight→minor; teaser = conversation+major+major_conversation  
+11. Results routes `/results/[checkId]` + `/items/[questionId]`  
+12. Analytics allowlist + rate-limit buckets + error codes  
+
 ## Definition of done (this PR)
 
 - `npm run build` succeeds with placeholder env for public keys where needed  
@@ -60,3 +77,4 @@ Ship the **E2E launch path** (E2E_LOCKS §14), not every Phase 9 nice-to-have.
 - Content validate CI still green  
 - App structure matches IMPLEMENTATION_PLAN §4 for in-scope routes  
 - README updated with local run instructions  
+- Checklist above satisfied for E2E path  
