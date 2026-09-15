@@ -45,10 +45,13 @@ export function ReadyClient({ checkId }: { checkId: string }) {
   async function startCheckout() {
     setCheckoutLoading(true);
     setError(null);
-    const result = await apiPost<{ url: string }>(`/api/checks/${checkId}/checkout`);
+    const result = await apiPost<{ url?: string; checkoutUrl?: string }>(
+      `/api/checks/${checkId}/checkout`,
+    );
     setCheckoutLoading(false);
     if (result.ok) {
-      window.location.href = result.data.url;
+      const destination = result.data.checkoutUrl ?? result.data.url;
+      if (destination) window.location.href = destination;
     } else {
       setError(
         result.error.code === "NOT_IMPLEMENTED"
